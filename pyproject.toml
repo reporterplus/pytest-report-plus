@@ -1,32 +1,10 @@
-#[project]
-#name = "pytest_json_reporter"
-#version = "0.1.0"
-#description = "A lightweight Playwright + Pytest JSON reporter with screenshots"
-#authors = [{ name = "Your Name", email = "you@example.com" }]
-#readme = "README.md"
-#requires-python = ">=3.8"
-#dependencies = [
-#    "pytest",
-#    "playwright",
-#    "pytest-playwright"
-#]
-#dynamic = ["license", "classifiers"]
-#
-#[project.optional-dependencies]
-#dev = ["pytest", "playwright", "black", "isort"]
-#
-#[tool.setuptools.packages.find]
-#where = ["."]
-#
-#[project.entry-points.pytest11]
-#playwright-json-reporter = "pytest_json_reporter.plugin"
 [tool.poetry]
-name = "pytest_reporter"
+name = "pytest-reporter-plus"
 version = "0.1.0"
-description = "Lightweight JSON test reporter for Pytest"
-authors = ["Your Name"]
+description = "Lightweight enhanced HTML reporter for Pytest"
+authors = ["Emjey"]
 license = "MIT"
-packages = [{ include = "pytest_json_reporter" }]
+packages = [{ include = "pytest_reporter_plus" }]
 
 [tool.poetry.dependencies]
 python = ">=3.9"
@@ -46,5 +24,8 @@ pytest-rerunfailures = "^15.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.plugins."pytest11"]
+pytest_reporter_plus = "pytest_reporter_plus.plugin"
 
 
