@@ -73,7 +73,6 @@ class JSONReporter:
             "logs": logs or [],
             "worker": worker
         }
-        print(f"Writing {len(self.results)} results to JSON file")
         if error:
             result["error"] = error
         self.results.append(result)
@@ -147,6 +146,7 @@ class JSONReporter:
       .header.passed {{ background: #e6f4ea; color: #2f7a33; }}
       .header.failed {{ background: #fdecea; color: #a83232; }}
       .header.skipped {{  background: #fff8e1; color: #b36b00;  }}
+       .header.error {{  background: #f0f0f0; color: #f0f0f0;  }}
       .details {{ padding: 0.5rem 1rem; display: none; border-top: 1px solid #ddd; }}
       .toggle::before {{ content: "▶"; display: inline-block; margin-right: 0.5rem; transition: transform 0.3s ease; }}
       .header.expanded .toggle::before {{ transform: rotate(90deg); }}
@@ -290,19 +290,20 @@ class JSONReporter:
         # Add summary
         total_tests = len(self.results)
         failed_tests = sum(1 for t in self.results if t['status'] == 'failed')
+        error_tests = sum(1 for t in self.results if t['status'] == 'error')
         slowest_test = max(self.results, key=lambda x: x.get('duration', 0), default=None)
         slowest_test_name = slowest_test['test'] if slowest_test else 'N/A'
         slowest_test_duration = slowest_test.get('duration', 0) if slowest_test else 0
 
         summary_html = f"""
-    <div style="padding: 1rem; background: {'#e6f4ea' if failed_tests == 0 else '#fdecea'}; 
-    border: 1px solid {'#2f7a33' if failed_tests == 0 else '#a83232'}; 
-    border-radius: 5px; margin-bottom: 1rem;">
-      {'<strong>Bingo!</strong> All your tests passed!' if failed_tests == 0 else
-        f'Total tests: {total_tests}, Failures: {failed_tests}.'}
-      The slowest test was <strong>{slowest_test_name}</strong> at {slowest_test_duration:.2f}s.
-    </div>
-    """
+            <div style="padding: 1rem; background: {'#e6f4ea' if failed_tests == 0 and error_tests == 0 else '#fdecea'}; 
+            border: 1px solid {'#2f7a33' if failed_tests == 0 and error_tests == 0 else '#a83232'}; 
+            border-radius: 5px; margin-bottom: 1rem;">
+              {'<strong>Bingo!</strong> All your tests passed!' if failed_tests == 0 and error_tests == 0 else
+        f'Total tests: {total_tests}, Failures: {failed_tests}, Errors: {error_tests}.'}
+              The slowest test was <strong>{slowest_test_name}</strong> at {slowest_test_duration:.2f}s.
+            </div>
+            """
 
         html = html.replace('<div id="tests-container">', summary_html + '<div id="tests-container">')
         html += "</div></body></html>"
@@ -312,9 +313,6 @@ class JSONReporter:
         output_file = os.path.join(self.output_dir, "report.html")
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(html)
-
-        print(f"✅ HTML report generated at {output_file}")
-
 
 if __name__ == "__main__":
     main()
