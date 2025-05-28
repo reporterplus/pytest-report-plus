@@ -1,3 +1,3 @@
 
-pytest_plugins = ["pytest_json_reporter.plugin"]
+pytest_plugins = ["pytest_reporter_plus.plugin"]
 
