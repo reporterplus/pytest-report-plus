@@ -112,3 +112,22 @@ class TestMergeJsonReports:
         assert merged[0]["status"] == "passed"  # final attempt
         assert merged[0]["flaky"] is True
         assert merged[0]["flaky_attempts"] == ["skipped", "passed"]
+
+    def test_merges_dict_with_results_key(self):
+        data1 = {"results": [{"nodeid": "test_sample.py::test_case", "status": "failed"}]}
+        data2 = {"results": [{"nodeid": "test_sample.py::test_case", "status": "passed"}]}
+
+        self._write_json("dict1.json", data1)
+        self._write_json("dict2.json", data2)
+
+        output_path = os.path.join(self.test_dir, "merged_dict_results.json")
+        merge_json_reports(directory=self.test_dir, output_path=output_path)
+
+        with open(output_path) as f:
+            merged = json.load(f)
+
+        assert len(merged) == 1
+        assert merged[0]["nodeid"] == "test_sample.py::test_case"
+        assert merged[0]["status"] in ["passed", "failed"]
+        assert merged[0]["flaky"] is True
+        assert set(merged[0]["flaky_attempts"]) == {"passed", "failed"}
