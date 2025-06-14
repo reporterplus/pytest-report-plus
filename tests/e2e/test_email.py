@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
-from pytest_reporter_plus.send_email_report import send_email_from_env, load_email_env  # update with actual import
+from pytest_reporter_plus.send_email_report import send_email_from_env, load_email_env
 
 
 @patch("smtplib.SMTP")
@@ -19,7 +19,6 @@ def test_send_email_success(mock_smtp):
         "email_password": "SG.fakekeyforunittesting"
     }
 
-    # Write a temporary HTML file to simulate report
     with open(config["report_path"], "w") as f:
         f.write("<h1>Test Report</h1>")
 
@@ -28,7 +27,6 @@ def test_send_email_success(mock_smtp):
 
     send_email_from_env(config)
 
-    # Assertions
     mock_smtp.assert_called_with("smtp.sendgrid.net", 587)
     mock_server.starttls.assert_called_once()
     mock_server.login.assert_called_once_with("apikey", "SG.fakekeyforunittesting")
@@ -65,7 +63,6 @@ def test_load_email_env_file_not_found():
 
 
 def test_send_email_handles_exception(tmp_path):
-    # Create a fake report file
     report_path = tmp_path / "report.html"
     report_path.write_text("<html><body>Fake report</body></html>")
 
