@@ -33,4 +33,4 @@ jobs:
 
       - name: 🧪 Run tests with coverage
         run: |
-          poetry run pytest --cov=pytest_reporter_plus tests/ --cov-fail-under=81 --cov-report=term
+          poetry run pytest --cov=pytest_reporter_plus tests/ --cov-fail-under=83 --cov-report=term
