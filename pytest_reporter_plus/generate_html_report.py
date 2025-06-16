@@ -167,24 +167,33 @@ class JSONReporter:
 
 
       function toggleFilter(longestCheckbox) {{
-        const failedCheckbox = document.getElementById('failedOnlyCheckbox');
-        const testsContainer = document.getElementById('tests-container');
-        const testElements = Array.from(testsContainer.querySelectorAll('.test'));
+  const failedCheckbox = document.getElementById('failedOnlyCheckbox');
+  const skippedCheckbox = document.getElementById('skippedOnlyCheckbox');
+  const testsContainer = document.getElementById('tests-container');
+  const testElements = Array.from(testsContainer.querySelectorAll('.test'));
 
-        if (longestCheckbox.checked) {{
-          failedCheckbox.checked = false;
-          testElements.forEach(el => el.style.display = 'block');
-          testElements.sort((a, b) => {{
-            const aDuration = parseFloat(a.querySelector('.timestamp').textContent.replace(/[^\d.]/g, '')) || 0;
-            const bDuration = parseFloat(b.querySelector('.timestamp').textContent.replace(/[^\d.]/g, '')) || 0;
-            return bDuration - aDuration;
-          }});
-          testElements.forEach(el => testsContainer.appendChild(el));
-        }} else {{
-          testElements.forEach(el => el.style.display = 'block');
-        }}
-        filterByMarkers(); // Reapply marker filter
-      }}
+  if (longestCheckbox.checked) {{
+    failedCheckbox.checked = false;
+    skippedCheckbox.checked = false;
+
+    // Re-enable all tests before sorting
+    testElements.forEach(el => el.style.display = 'block');
+
+    // Sort and reorder
+    testElements.sort((a, b) => {{
+      const aDuration = parseFloat(
+  a.querySelector('.timestamp').textContent.replace(/[^\d.]/g, '')
+) || 0;
+      const bDuration = parseFloat(b.querySelector('.timestamp').textContent.replace(/[^\d.]/g, '')) || 0;
+      return bDuration - aDuration;
+    }});
+
+    testElements.forEach(el => testsContainer.appendChild(el));
+  }}
+
+  // Reapply marker filter (should now handle failed/skipped too)
+  filterByMarkers();
+}}
 
       function toggleFailedOnly(failedCheckbox) {{
         const longestCheckbox = document.getElementById('longestOnlyCheckbox');
@@ -201,6 +210,26 @@ class JSONReporter:
         }}
         filterByMarkers(); // Reapply marker filter
       }}
+      function toggleSkippedOnly(skippedCheckbox) {{
+  const longestCheckbox = document.getElementById('longestOnlyCheckbox');
+  const failedCheckbox = document.getElementById('failedOnlyCheckbox');
+  const testElements = document.querySelectorAll('.test');
+
+  if (skippedCheckbox.checked) {{
+    longestCheckbox.checked = false;
+    failedCheckbox.checked = false;
+    testElements.forEach(el => {{
+      const header = el.querySelector('.header');
+      const isSkipped = header.classList.contains('skipped');
+      el.style.display = isSkipped ? 'block' : 'none';
+    }});
+  }} else {{
+    testElements.forEach(el => el.style.display = 'block');
+  }}
+
+  filterByMarkers(); // Reapply marker filter
+}}
+
       function initializeUniversalSearch() {{
     const searchInput = document.getElementById('universal-search');
     if (!searchInput) return;
@@ -218,16 +247,23 @@ class JSONReporter:
 
 document.addEventListener('DOMContentLoaded', initializeUniversalSearch);
 
-      function filterByMarkers() {{
+    function filterByMarkers() {{
   const selected = Array.from(document.querySelectorAll('.marker-filter input[type="checkbox"]:checked')).map(cb => cb.value);
   const failedOnly = document.getElementById('failedOnlyCheckbox').checked;
+  const skippedOnly = document.getElementById('skippedOnlyCheckbox').checked;
+
   document.querySelectorAll('.test').forEach(el => {{
+    const header = el.querySelector('.header');
     const markers = el.getAttribute('data-markers').split(',');
-    const isFailed = el.querySelector('.header').classList.contains('failed');
+    const isFailed = header.classList.contains('failed');
+    const isSkipped = header.classList.contains('skipped');
+
     const showAllMarkers = selected.length === 0;
     const matchesMarker = showAllMarkers || selected.some(m => markers.includes(m));
     const matchesFailed = !failedOnly || isFailed;
-    el.style.display = (matchesMarker && matchesFailed) ? 'block' : 'none';
+    const matchesSkipped = !skippedOnly || isSkipped;
+
+    el.style.display = (matchesMarker && matchesFailed && matchesSkipped) ? 'block' : 'none';
   }});
 }}
 
@@ -235,10 +271,12 @@ document.addEventListener('DOMContentLoaded', initializeUniversalSearch);
       window.onload = function() {{
         const failedCheckbox = document.getElementById('failedOnlyCheckbox');
         const longestCheckbox = document.getElementById('longestOnlyCheckbox');
+        const skippedCheckbox = document.getElementById('skippedOnlyCheckbox');
         failedCheckbox.checked = true;
         toggleFailedOnly(failedCheckbox);
         failedCheckbox.addEventListener('change', () => toggleFailedOnly(failedCheckbox));
         longestCheckbox.addEventListener('change', () => toggleFilter(longestCheckbox));
+        skippedCheckbox.addEventListener('change', () => toggleSkippedOnly(skippedCheckbox));
 
         const markerCheckboxes = document.querySelectorAll('.marker-filter input[type="checkbox"]');
         markerCheckboxes.forEach(cb => cb.addEventListener('change', filterByMarkers));
@@ -250,6 +288,10 @@ document.addEventListener('DOMContentLoaded', initializeUniversalSearch);
       <label>
         <input type="checkbox" id="failedOnlyCheckbox" />
         Show only failed tests
+      </label>
+      <label>
+        <input type="checkbox" id="skippedOnlyCheckbox" />
+        Show only skipped tests
       </label>
       <label style="margin-left: 1rem;">
         <input type="checkbox" id="longestOnlyCheckbox" />
