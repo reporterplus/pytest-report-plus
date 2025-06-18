@@ -104,13 +104,10 @@ def pytest_sessionfinish(session, exitstatus):
         return
 
     if is_xdist:
-        print("Merging reports in main process...")
         merge_json_reports(directory=".pytest_worker_jsons", output_path=json_path)
-        print(f"✅ Merged report written to {json_path}")
     else:
         reporter.results = mark_flaky_tests(reporter.results)
         reporter.write_report()
-        print(f"✅ Standalone JSON report written to {json_path}")
 
     script_path = os.path.join(os.path.dirname(__file__), "generate_html_report.py")
 
@@ -126,7 +123,6 @@ def pytest_sessionfinish(session, exitstatus):
             "--screenshots", screenshots,
             "--output", html_output
         ], check=True)
-        print(f"✅ HTML report generated at {html_output}/report.html")
     except Exception as e:
         print(f"❌ Exception during HTML report generation: {e}")
 
@@ -141,14 +137,9 @@ def pytest_sessionfinish(session, exitstatus):
 
 def pytest_sessionstart(session):
     configure_logging()
-    print("Plugin loaded: pytest_sessionstart called")
     session.config.addinivalue_line(
         "markers", "link(url): Add a link to external test case or documentation."
     )
-
-
-def pytest_runtest_logreport(report):
-    print(f"pytest_runtest_logreport: {report.nodeid} - {report.outcome}")
 
 
 def pytest_load_initial_conftests(args):
@@ -192,9 +183,7 @@ def pytest_addoption(parser):
         help="Helps capture flaky tests in the last n number of builds"
     )
 
-
 def take_screenshot_on_failure(item, page):
-    print("✅ take_screenshot_on_failure was called")
     screenshot_dir = os.path.join(os.getcwd(), "screenshots")
     os.makedirs(screenshot_dir, exist_ok=True)
     filename = f"{item.name}.png".replace("/", "_").replace("\\", "_")

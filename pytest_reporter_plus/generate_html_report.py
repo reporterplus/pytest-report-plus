@@ -86,16 +86,12 @@ class JSONReporter:
         try:
             with open(self.report_path, "w", encoding="utf-8") as f:
                 json.dump(self.results, f, indent=2)
-            print(f"✅ JSON report successfully written")
         except Exception as e:
             print(f"❌ Failed to write JSON report ")
 
     def copy_all_screenshots(self):
         screenshots_output_dir = os.path.join(self.output_dir, "screenshots")
         os.makedirs(screenshots_output_dir, exist_ok=True)
-
-        print(f"📦 Copying all .png files from '{self.screenshots_dir}' to '{screenshots_output_dir}'")
-
         for root, _, files in os.walk(self.screenshots_dir):
             for file in files:
                 if file.endswith(".png"):
@@ -103,7 +99,6 @@ class JSONReporter:
                     dest_path = os.path.join(screenshots_output_dir, file)
                     if not os.path.exists(dest_path):
                         shutil.copyfile(src_path, dest_path)
-                        print(f"✅ Copied: {src_path} → {dest_path}")
 
     def find_screenshot_and_copy(self, test_name):
         screenshots_output_dir = os.path.join(self.output_dir, "screenshots")

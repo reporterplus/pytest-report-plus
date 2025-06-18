@@ -33,7 +33,8 @@ def merge_json_reports(directory=".pytest_worker_jsons", output_path="playwright
         final_test["flaky_attempts"] = [t.get("status") for t in attempts]
         merged_results.append(final_test)
 
-    with open(output_path, "w") as f:
-        json.dump(merged_results, f, indent=2)
-
-    print(f"✅ Merged report written to {output_path}")
+    try:
+        with open(output_path, "w") as f:
+            json.dump(merged_results, f, indent=2)
+    except Exception as e:
+        print(f"❌ Failed to write merged report to {output_path}: {e}")
