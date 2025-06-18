@@ -170,6 +170,7 @@ class JSONReporter:
   const failedCheckbox = document.getElementById('failedOnlyCheckbox');
   const skippedCheckbox = document.getElementById('skippedOnlyCheckbox');
   const untrackedCheckbox = document.getElementById('untrackedOnlyCheckbox');
+  const flakyCheckbox = document.getElementById('flakyOnlyCheckbox');
   const testsContainer = document.getElementById('tests-container');
   const testElements = Array.from(testsContainer.querySelectorAll('.test'));
 
@@ -177,6 +178,7 @@ class JSONReporter:
     failedCheckbox.checked = false;
     skippedCheckbox.checked = false;
     untrackedCheckbox.checked = false;
+    flakyCheckbox.checked = false;
     // Re-enable all tests before sorting
     testElements.forEach(el => el.style.display = 'block');
 
@@ -201,11 +203,13 @@ class JSONReporter:
   const longestCheckbox = document.getElementById('longestOnlyCheckbox');
   const skippedCheckbox = document.getElementById('skippedOnlyCheckbox');
   const failedCheckbox = document.getElementById('failedOnlyCheckbox');
+  const flakyCheckbox = document.getElementById('flakyOnlyCheckbox');
 
   if (checkbox.checked) {{
     longestCheckbox.checked = false;
     skippedCheckbox.checked = false;
     failedCheckbox.checked = false;
+    flakyCheckbox.checked = false
     testCards.forEach(card => {{
       const hasLink = card.querySelector('a[href]');
       card.style.display = hasLink ? 'none' : 'block';
@@ -222,16 +226,40 @@ function toggleUntrackedInfo() {{
   card.style.display = card.style.display === 'none' ? 'block' : 'none';
 }}
 
+function toggleFlakyOnly(checkbox) {{
+    const longestCheckbox = document.getElementById('longestOnlyCheckbox');
+    const untrackedCheckbox = document.getElementById('untrackedOnlyCheckbox');
+    const skippedCheckbox = document.getElementById('skippedOnlyCheckbox');
+    const failedCheckbox = document.getElementById('failedOnlyCheckbox');
+  const testElements = document.querySelectorAll('.test');
+  if (checkbox.checked) {{
+    longestCheckbox.checked = false;
+    skippedCheckbox.checked = false;
+    failedCheckbox.checked = false;
+    untrackedCheckbox.checked = false;
+    testElements.forEach(el => {{
+      const isFlaky = el.querySelector('.is-flaky') !== null;
+      el.style.display = isFlaky ? 'block' : 'none';
+    }});
+  }} else {{
+    testElements.forEach(el => {{
+      el.style.display = 'block';
+    }});
+  }}
+}}
+
 
       function toggleFailedOnly(failedCheckbox) {{
         const longestCheckbox = document.getElementById('longestOnlyCheckbox');
         const untrackedCheckbox = document.getElementById('untrackedOnlyCheckbox');
         const skippedCheckbox = document.getElementById('skippedOnlyCheckbox');
+        const flakyCheckbox = document.getElementById('flakyOnlyCheckbox');
         const testElements = document.querySelectorAll('.test');
         if (failedCheckbox.checked) {{
           longestCheckbox.checked = false;
           untrackedCheckbox.checked = false;
           skippedCheckbox.checked = false;
+          flakyCheckbox.checked = false;
           testElements.forEach(el => {{
             const header = el.querySelector('.header');
             const isFailed = header.classList.contains('failed');
@@ -246,12 +274,14 @@ function toggleUntrackedInfo() {{
   const longestCheckbox = document.getElementById('longestOnlyCheckbox');
   const failedCheckbox = document.getElementById('failedOnlyCheckbox');
   const untrackedCheckbox = document.getElementById('untrackedOnlyCheckbox');
+  const flakyCheckbox = document.getElementById('flakyOnlyCheckbox');
   const testElements = document.querySelectorAll('.test');
 
   if (skippedCheckbox.checked) {{
     longestCheckbox.checked = false;
     failedCheckbox.checked = false;
     untrackedCheckbox.checked = false;
+    flakyCheckbox.checked = false;
     testElements.forEach(el => {{
       const header = el.querySelector('.header');
       const isSkipped = header.classList.contains('skipped');
@@ -307,12 +337,14 @@ document.addEventListener('DOMContentLoaded', initializeUniversalSearch);
         const longestCheckbox = document.getElementById('longestOnlyCheckbox');
         const skippedCheckbox = document.getElementById('skippedOnlyCheckbox');
         const untrackedCheckbox = document.getElementById('untrackedOnlyCheckbox');
+        const flakyCheckbox = document.getElementById('flakyOnlyCheckbox');
         failedCheckbox.checked = true;
         toggleFailedOnly(failedCheckbox);
         failedCheckbox.addEventListener('change', () => toggleFailedOnly(failedCheckbox));
         longestCheckbox.addEventListener('change', () => toggleFilter(longestCheckbox));
         skippedCheckbox.addEventListener('change', () => toggleSkippedOnly(skippedCheckbox));
         untrackedCheckbox.addEventListener('change', () => toggleUntrackedOnly(untrackedCheckbox));
+        flakyCheckbox.addEventListener('change', () => toggleFlakyOnly(flakyCheckbox));
         const markerCheckboxes = document.querySelectorAll('.marker-filter input[type="checkbox"]');
         markerCheckboxes.forEach(cb => cb.addEventListener('change', filterByMarkers));
       }};
@@ -374,6 +406,10 @@ document.addEventListener('DOMContentLoaded', initializeUniversalSearch);
   </ul>
   Add these markers to your test to track them better
 </div>
+<label style="margin-left: 1rem;">
+  <input type="checkbox" id="flakyOnlyCheckbox">
+  Show flaky tests only
+</label>
     </div>
     <div class="search-container">
           <input
