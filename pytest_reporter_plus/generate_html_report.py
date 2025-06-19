@@ -146,8 +146,8 @@ class JSONReporter:
       img {{ max-width: 100%; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 3px; }}
       .checkbox-container {{ margin-bottom: 1rem; }}
       .header-section {{ display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }}
-      .test-info {{ flex: 1; min-width: 200px; }}
-      .meta {{ justify-content: flex-start; flex: 1; }}
+      .test-info {{ flex: 1; min-width: 200px; word-break: break-word; white-space: normal; }}
+      .meta {{ justify-content: flex-start; flex: 1; word-break: break-word; white-space: normal; }}
       .badges-and-timing {{ justify-content: flex-end; flex-wrap: wrap; }}
       .timestamp {{ white-space: nowrap; font-weight: bold; }}
       .badges-and-timing > * {{ margin-left: 24px; }}
