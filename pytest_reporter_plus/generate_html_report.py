@@ -135,7 +135,7 @@ class JSONReporter:
     <style>
       body {{ font-family: Arial, sans-serif; padding: 1rem; background: #f9f9f9; }}
       .test {{ border: 1px solid #ddd; margin-bottom: 0.5rem; border-radius: 5px; background: white; }}
-      .header {{ padding: 0.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }}
+      .header {{ padding: 0.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }}
       .header.passed {{ background: #e6f4ea; color: #2f7a33; }}
       .header.failed {{ background: #fdecea; color: #a83232; }}
       .header.skipped {{  background: #fff8e1; color: #b36b00;  }}
@@ -145,6 +145,12 @@ class JSONReporter:
       .header.expanded .toggle::before {{ transform: rotate(90deg); }}
       img {{ max-width: 100%; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 3px; }}
       .checkbox-container {{ margin-bottom: 1rem; }}
+      .header-section {{ display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }}
+      .test-info {{ flex: 1; min-width: 200px; }}
+      .meta {{ justify-content: flex-start; flex: 1; }}
+      .badges-and-timing {{ justify-content: flex-end; flex-wrap: wrap; }}
+      .timestamp {{ white-space: nowrap; font-weight: bold; }}
+      .badges-and-timing > * {{ margin-left: 24px; }}
     </style>
     <script>
       function toggleDetails(headerElem) {{
@@ -456,6 +462,9 @@ document.addEventListener('DOMContentLoaded', initializeUniversalSearch);
                     'style="background:#f39c12;color:white;padding:2px 6px;'
                     'border-radius:3px;font-weight:bold;font-size:0.85em;">FLAKY</span>'
                 )
+            else:
+                 # Invisible placeholder to preserve layout
+                flaky_badge = '<span style="display:inline-block; min-width:40px;"></span>'
 
             link_html = ""
             links = test.get("links", [])
@@ -467,37 +476,44 @@ document.addEventListener('DOMContentLoaded', initializeUniversalSearch);
                         f'border-radius:3px;font-weight:bold;font-size:0.85em;'
                         f'text-decoration:none;margin-right:6px;"> Link </a>'
                     )
+            else:
+              # Invisible placeholder to preserve layout
+              link_html = '<span style="display:inline-block; min-width:45px;"></span>'
 
             html += f'''
     
 <div class="test test-card" data-name="{test['test']}" data-link="{','.join(test.get('links', []))}" data-markers="{marker_str}">
   <div class="header {status_class}" onclick="toggleDetails(this)">
-    <span class="toggle"></span>
-    <span>
-      <strong>{test["test"]}</strong> — {test["status"].upper()}
-    </span>
-    
-    <span class="nodeid-badge" style="display: flex; align-items: center; gap: 6px;">
-      <code style="font-size: 0.6em; color: #555;">{test["nodeid"]}</code>
-      <button class="copy-btn"
-              onclick="event.stopPropagation(); copyToClipboard('{test["nodeid"]}')"
-              title="Copy full test path"
-              style="
-                cursor: pointer;
-                background: none;
-                border: none;
-                font-size: 1.2em;
-                padding: 0;
-                line-height: 1;
-              ">
-        📋
-      </button>
-    </span>
+    <div class="header-section test-info">
+      <span class="toggle"></span>
+      <strong>{test["test"]}</strong>
+      <span>— {test["status"].upper()}</span>
+    </div>
+    <div class="header-section meta">
+      <span class="nodeid-badge" style="display: flex; align-items: center; gap: 6px;">
+        <code style="font-size: 0.6em; color: #555;">{test["nodeid"]}</code>
+        <button class="copy-btn"
+                onclick="event.stopPropagation(); copyToClipboard('{test["nodeid"]}')"
+                title="Copy full test path"
+                style="
+                  cursor: pointer;
+                  background: none;
+                  border: none;
+                  font-size: 1.2em;
+                  padding: 0;
+                  line-height: 1;
+                ">
+          📋
+        </button>
+      </span>
+      <span class="worker-id" style="background: #ddd; border-radius: 3px; padding: 2px 5px; font-size: 0.85em; font-weight: bold;">{test["worker"]}</span>
+    </div>
 
-    <span class="worker-id" style="background: #ddd; border-radius: 3px; padding: 2px 5px; font-size: 0.85em; font-weight: bold;">{test["worker"]}</span>
-    <span class="worker-id" style="background: #f39c12; color:white; border-radius: 3px; padding: 2px 5px; font-size: 0.85em; font-weight: bold;">{flaky_badge}</span>
-    <span class="worker-id" style="background: #3498db; color:white; border-radius: 3px; padding: 2px 5px; font-size: 0.85em; font-weight: bold;">{link_html}</span>
-    <span class="timestamp">⏱ {test.get("duration", 0):.2f}s</span>
+    <div class="header-section badges-and-timing">
+      {flaky_badge}
+      {link_html}
+      <span class="timestamp">⏱ {test.get("duration", 0):.2f}s</span>
+    </div>
   </div>
 
   <div class="details">
