@@ -8,7 +8,7 @@ A powerful, plug-and-play Pytest plugin to generate **HTML + JSON reports**, det
 ```bash
 pip install pytest-reporter-plus
 # or with Poetry
-poetry add --dev pytest-reporter-plus
+poetry add pytest-reporter-plus
 ```
 
 ## 🧾 Usage
@@ -52,13 +52,9 @@ report.html – a clean, styled HTML report
 
 #### 🔄 Flaky Test Detection: Automatically flags flaky tests so you can spot and fix inconsistent failures quickly.
 
-![Screenshot 2025-05-28 at 3 43 17 PM](https://github.com/user-attachments/assets/6fd7a419-58c1-4651-96f7-093ced1f02ee)
+![ScreenRecording2025-06-21at2 37 31PM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/90f694bf-189c-45e1-8e1d-7acd2a975f91)
 
 #### 📸 Screenshot Support: View screenshots directly in the report to understand failures faster.
-
-#### 📝 Comprehensive output capture: All your test logs with loggers, print() statements, and screenshots are automatically captured and embedded in the report...
-
-![ezgif-744a5d34a4c46d](https://github.com/user-attachments/assets/209cd2c0-d33b-48ec-b58b-8c8991ce35be)
 
 #### 📧 Email Test Reports: Send your reports via email effortlessly using SendGrid integration.
 
@@ -66,11 +62,12 @@ report.html – a clean, styled HTML report
 
 #### 🐢 Spot Slow Tests: Highlights the slowest tests so you know where to optimize your suite.
 
-![ezgif-64896277dcf8f8](https://github.com/user-attachments/assets/f5616a07-0dd9-40ed-aa9a-cf9adee3a0b8)
+![ScreenRecording2025-06-21at2 52 49PM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/b9760927-7c67-4bbf-b03d-e13964c727ee)
 
-#### ⏱️ Sort & Filter: Easily sort tests by duration or filter by custom tags and skip status to focus on what matters.
+#### 📝 Comprehensive output capture: All your test logs with loggers, print() statements, and screenshots are automatically captured and embedded in the report...
 
-![ezgif-3056394be0e9a4](https://github.com/user-attachments/assets/bb60c50a-4709-42f3-8571-19cbd76a93cf)
+![ezgif-744a5d34a4c46d](https://github.com/user-attachments/assets/209cd2c0-d33b-48ec-b58b-8c8991ce35be)
+
 
 #### 🔍 Universal Test Search + Smart Link Navigation
 
@@ -84,7 +81,11 @@ Just start typing, and the dashboard will instantly filter tests by:
 
 ✅ Custom URLs or keywords present in the links
 
-![Screen Recording 2025-06-01 at 2 48 08 PM](https://github.com/user-attachments/assets/057441ac-06a3-421f-aafc-915968a90463)
+
+![ScreenRecording2025-06-21at3 10 06PM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/f81c9a81-f98d-4151-ad7a-c1184cd199eb)
+
+
+### AND MANY MANY MORE
 
 ## Target Audience
 
