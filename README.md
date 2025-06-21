@@ -86,13 +86,35 @@ Just start typing, and the dashboard will instantly filter tests by:
 
 ![Screen Recording 2025-06-01 at 2 48 08 PM](https://github.com/user-attachments/assets/057441ac-06a3-421f-aafc-915968a90463)
 
-## Why use pytest-reporter-plus?
+## Target Audience
 
-Stop wasting time writing and maintaining custom pytest reporter hooks like pytest_runtest_makereport!
-With pytest-reporter-plus, you get a beautiful, lightweight HTML report out of the box — no extra coding needed.
+This plugin is aimed at those who are:
 
-Just install, run your tests, and let the plugin handle all the reporting magic. Focus on what matters: writing and
-running your tests.
+- Are frustrated with archiving folders full of assets, CSS, JS, and dashboards just to share test results.
+
+- Don’t want to refactor existing test suites or tag everything with new decorators just to integrate with a reporting tool.
+
+- Prefer simplicity — a zero-config, zero code, lightweight report that still looks clean, useful, and polished.
+
+- Want “just enough” — not bare-bones plain text, not a full dashboard with database setup — just a portable HTML report that STILL supports features like links, screenshots, and markers.
+
+
+## Comparison with Alternatives
+Most existing pytest reporter tools:
+
+Only generate HTML reports from a single run  (by making you write code for creating xmls like pytest-html) OR they generate all the JS and png files that are not the scope of test results and force you to archive it.
+
+Heavy duty with bloated charts and other test management features(when they arent your only test management system either) increasing your archive size.
+
+This plugin aims to fill those gaps by acting as a companion layer on top of the JSON report, focusing on:
+
+🔄 Merge + flakiness intelligence
+
+🔗 Traceability via metadata
+
+🧼 HTML that’s both readable and minimal
+
+🧼 Quickly copy test paths and run in your local
 
 ## 🔁 Flaky Test Detection
 
@@ -134,13 +156,17 @@ PRs, issues, and feature requests are welcome! Let's make this tool more awesome
 ```
 docker build -t pytest-reporter-plus .
 docker run -it pytest-reporter-plus /bin/bash 
+poetry install --dev
+
+poetry run pytest tests/ 
 ```
 
-## 📛 Naming
+## Motivation
+I’m building and maintaining this in my free time, and would really appreciate:
 
-Why pytest-reporter-plus?
+⭐ Stars if you find it useful
 
-Because it does more than just reporting – it’s your enhanced test summary companion ✨
+🐞 Bug reports, feedback, or PRs if you try it out
 
 ## 📜 License
 
