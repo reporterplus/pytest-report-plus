@@ -41,7 +41,7 @@ report.html – a clean, styled HTML report
 | `--html-output`         | Directory to output HTML reports                    | `report_output`          | *Any valid directory*             |
 | `--screenshots`         | Directory where screenshots will be stored          | `screenshots`            | *Any valid directory*             |
 | `--send-email`          | Send HTML report via email after the test run       | `False`                  | `True`, `False`                   |
-| `PYTEST_REP_PLUS_OPEN`  | Open your HTML report automatically post completion | `None`                   | `always`, `failed`                |
+| `--should-open-report`  | Open your HTML report automatically post completion | `failed`                 | `always`, `failed`, `never`       |
 
 
 ---
