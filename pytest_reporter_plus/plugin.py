@@ -135,7 +135,7 @@ def pytest_sessionfinish(session, exitstatus):
         except Exception as e:
             print(f"❌ Failed to send email: {e}")
 
-    open_html_report(report_path=f"{html_output}/report.html", config=session.config)
+    open_html_report(report_path=f"{html_output}/report.html",json_path=json_path, config=session.config)
 
 
 def pytest_sessionstart(session):
@@ -287,24 +287,25 @@ def mark_flaky_tests(results):
 
     return final_results
 
-def open_html_report(report_path, config):
-    should_open = config.getoption("--should-open-report", default="failed").lower()
+def open_html_report(report_path, json_path, config):
+   should_open = config.getoption("--should-open-report", default="failed").lower()
 
-    if not report_path or not os.path.exists(report_path):
-        return
+   if not report_path or not os.path.exists(report_path):
+       return
 
-    try:
-        with open(report_path, "r") as f:
-            import json
-            report_data = json.load(f)
+   try:
+       with open(json_path, "r") as f:
+           import json
+           report_data = json.load(f)
 
-        has_failures = any(
-            t.get("status") == "failed" or t.get("error")
-            for t in report_data
-        )
+       has_failures = any(
+           t.get("status") == "failed" or t.get("error")
+           for t in report_data
+       )
 
-        if should_open == "always" or (should_open == "failed" and has_failures):
-            webbrowser.open(f"file://{os.path.abspath(report_path)}")
+       if should_open == "always" or (should_open == "failed" and has_failures):
+           webbrowser.open(f"file://{os.path.abspath(report_path)}")
 
-    except Exception as e:
-        print(f"⚠️ Could not open report: {e}")
+   except Exception as e:
+       print(f"⚠️ Could not open report: {e}")
+
