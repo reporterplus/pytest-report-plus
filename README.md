@@ -33,14 +33,16 @@ report.html – a clean, styled HTML report
 
 ## Available Options
 
-| Option                  | Description                                   | Default                  | Choices                           |
-|-------------------------|-----------------------------------------------|--------------------------|-----------------------------------|
-| `--json-report`         | Path to save individual JSON test reports     | `playwright_report.json` | *Any valid file path*             |
-| `--automation-tool`     | Specify automation tool used for testing      | `playwright`             | `playwright`, `selenium`, `other` |
-| `--capture-screenshots` | When to capture screenshots                   | `failed`                 | `failed`, `all`, `none`           |
-| `--html-output`         | Directory to output HTML reports              | `report_output`          | *Any valid directory*             |
-| `--screenshots`         | Directory where screenshots will be stored    | `screenshots`            | *Any valid directory*             |
-| `--send-email`          | Send HTML report via email after the test run | `False`                  | `True`, `False`                   |
+| Option                  | Description                                         | Default                  | Choices                           |
+|-------------------------|-----------------------------------------------------|--------------------------|-----------------------------------|
+| `--json-report`         | Path to save individual JSON test reports           | `playwright_report.json` | *Any valid file path*             |
+| `--automation-tool`     | Specify automation tool used for testing            | `playwright`             | `playwright`, `selenium`, `other` |
+| `--capture-screenshots` | When to capture screenshots                         | `failed`                 | `failed`, `all`, `none`           |
+| `--html-output`         | Directory to output HTML reports                    | `report_output`          | *Any valid directory*             |
+| `--screenshots`         | Directory where screenshots will be stored          | `screenshots`            | *Any valid directory*             |
+| `--send-email`          | Send HTML report via email after the test run       | `False`                  | `True`, `False`                   |
+| `PYTEST_REP_PLUS_OPEN`  | Open your HTML report automatically post completion | `None`                   | `always`, `failed`                |
+
 
 ---
 

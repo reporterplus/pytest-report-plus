@@ -1,4 +1,5 @@
 import shutil
+import webbrowser
 from pathlib import Path
 
 import pytest
@@ -133,6 +134,8 @@ def pytest_sessionfinish(session, exitstatus):
             send_email_from_env(config)
         except Exception as e:
             print(f"❌ Failed to send email: {e}")
+
+    open_html_report("report.html")
 
 
 def pytest_sessionstart(session):
@@ -276,3 +279,23 @@ def mark_flaky_tests(results):
         final_results.append(final_test)
 
     return final_results
+
+def open_html_report(report_path):
+    should_open = os.getenv("PYTEST_REP_PLUS_OPEN", "").lower()
+    if not report_path or not os.path.exists(report_path):
+        return
+    try:
+        with open(report_path, "r") as f:
+            import json
+
+            report_data = json.load(f)
+
+        has_failures = any(
+            t.get("status") == "failed" or t.get("error")
+            for t in report_data
+        )
+
+        if should_open == "always" or (should_open == "failed" and has_failures):
+            webbrowser.open(f"file://{os.path.abspath(report_path)}")
+    except Exception as e:
+        print(f"⚠️ Could not open report: {e}")
