@@ -118,6 +118,22 @@ class JSONReporter:
                     return os.path.join("screenshots", file)
         return None
 
+    def format_error_with_diffs(error_text: str) -> str:
+        import html
+        lines = html.escape(error_text).splitlines()
+        html_lines = []
+        for line in lines:
+            stripped = line.strip()
+            if stripped.startswith("-"):
+                html_lines.append(f"<div class='diff-removed'>❌ {line}</div>")
+            elif stripped.startswith("+"):
+                html_lines.append(f"<div class='diff-added'>✅ {line}</div>")
+            elif "AssertionError" in stripped:
+                html_lines.append(f"<div class='assertion-error'>{line}</div>")
+            else:
+                html_lines.append(f"<pre>{line}</pre>")
+        return "\n".join(html_lines)
+
     def generate_html_report(self):
         # Extract all unique markers
         ignore_markers = {"link"}
@@ -503,7 +519,8 @@ class JSONReporter:
                 'failed' if test['status'] == 'failed' else
                 'skipped'
             )
-            error_html = f"<pre>{test.get('error', '')}</pre>" if test.get('error') else ""
+            error_text = test.get("error", "")
+            error_html = self.format_error_with_diffs(error_text)
             screenshot_path = self.find_screenshot_and_copy(test['test'])
             screenshot_html = f'<div class="details-screenshot"><img src="{screenshot_path}" alt="Screenshot" onclick="toggleFullscreen(this)"></div>' if screenshot_path else ""
             marker_str = ",".join(test.get("markers", []))
@@ -583,7 +600,7 @@ class JSONReporter:
   <div class="details">
     <div class="details-content">
       <div class="details-text">
-        {error_html}
+        {{ error_html | safe }}
         {stdout_html}
         {stderr_html}
         {logs_html}
