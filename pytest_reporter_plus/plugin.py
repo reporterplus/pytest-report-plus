@@ -7,6 +7,7 @@ import pytest
 from pytest_reporter_plus.extract_link import extract_links_from_item
 from pytest_reporter_plus.generate_html_report import JSONReporter
 from pytest_reporter_plus.json_merge import merge_json_reports
+from pytest_reporter_plus.resolver_driver import take_screenshot_generic, resolve_driver
 from pytest_reporter_plus.send_email_report import send_email_from_env, load_email_env
 
 python_executable = shutil.which("python3") or shutil.which("python")
@@ -32,6 +33,7 @@ def pytest_runtest_setup(item):
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
+    print("AM I RUNNING? MAKE REPORT?")
     outcome = yield
     report = outcome.get_result()
 
@@ -46,23 +48,25 @@ def pytest_runtest_makereport(item, call):
             caplog_text = "\n".join(caplog.messages) if caplog.messages else None
 
         screenshot_path = None
+
         should_capture_screenshot = (
                 capture_option == "all" or
                 (capture_option == "failed" and report.outcome == "failed")
         )
 
-        if should_capture_screenshot:
-            driver = (
-                    item.funcargs.get("page" if tool == "playwright" else "driver", None)
-                    or getattr(item, "page_for_screenshot", None)
-            )
-            if driver:
-                if tool == "playwright":
-                    screenshot_path = take_screenshot_on_failure(item, driver)
-                elif tool == "selenium":
-                    screenshot_path = take_screenshot_selenium(item, driver)
-                else:
-                    pass
+        if not should_capture_screenshot:
+            return
+
+        driver = resolve_driver(item)
+
+        if not driver:
+            return
+
+        try:
+            take_screenshot_generic(item, driver)
+        except Exception as e:
+            print(f"❌ Failed to capture screenshot: {e}")
+
         reporter = config._json_reporter
         worker_id = os.getenv("PYTEST_XDIST_WORKER") or "main"
         reporter.log_result(
