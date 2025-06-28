@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 from datetime import datetime
+import html
 
 
 def main():
@@ -118,8 +119,7 @@ class JSONReporter:
                     return os.path.join("screenshots", file)
         return None
 
-    def format_error_with_diffs(error_text: str) -> str:
-        import html
+    def format_error_with_diffs(self, error_text: str) -> str:
         lines = html.escape(error_text).splitlines()
         html_lines = []
         for line in lines:
