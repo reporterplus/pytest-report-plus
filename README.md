@@ -47,9 +47,15 @@ report.html – a clean, styled HTML report
 
 ---
 
+# Keep using your regular pytest commands — just plug this in to unlock the below powerful reporting features with zero extra effort.
+
 ## ✨ Features
 
 #### 🧩 Unified Test Reports: Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity.
+
+### Easily track Untracked test scenarios
+
+
 
 #### 🔄 Flaky Test Detection: Automatically flags flaky tests so you can spot and fix inconsistent failures quickly.
 
@@ -92,6 +98,10 @@ Just start typing, and the dashboard will instantly filter tests by:
 
 This plugin is aimed at those who are:
 
+- Tired of writing extra code just to generate reports or capture screenshots
+
+- Manually attaching logs or outputs to test results
+
 - Are frustrated with archiving folders full of assets, CSS, JS, and dashboards just to share test results.
 
 - Don’t want to refactor existing test suites or tag everything with new decorators just to integrate with a reporting tool.
@@ -117,14 +127,6 @@ This plugin aims to fill those gaps by acting as a companion layer on top of the
 🧼 HTML that’s both readable and minimal
 
 🧼 Quickly copy test paths and run in your local
-
-## 🔁 Flaky Test Detection
-
-If a test is retried multiple times (e.g. due to a --reruns plugin), the report will flag it as FLAKY.
-
-In the HTML report, you’ll see a badge like:
-
-![Screenshot 2025-05-28 at 3 43 17 PM](https://github.com/user-attachments/assets/6fd7a419-58c1-4651-96f7-093ced1f02ee)
 
 ## 📧 Email Report (Optional)
 
