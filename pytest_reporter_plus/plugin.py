@@ -33,7 +33,6 @@ def pytest_runtest_setup(item):
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    print("AM I RUNNING? MAKE REPORT?")
     outcome = yield
     report = outcome.get_result()
 
