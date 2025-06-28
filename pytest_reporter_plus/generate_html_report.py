@@ -125,13 +125,21 @@ class JSONReporter:
         for line in lines:
             stripped = line.strip()
             if stripped.startswith("-"):
-                html_lines.append(f"<div class='diff-removed'>❌ {line}</div>")
+                html_lines.append(
+                    f"<div style='color: red; background-color: #ffecec; padding: 2px; border-left: 4px solid red;'>❌ {line}</div>"
+                )
             elif stripped.startswith("+"):
-                html_lines.append(f"<div class='diff-added'>✅ {line}</div>")
+                html_lines.append(
+                    f"<div style='color: green; background-color: #eaffea; padding: 2px; border-left: 4px solid green;'>✅ {line}</div>"
+                )
             elif "AssertionError" in stripped:
-                html_lines.append(f"<div class='assertion-error'>{line}</div>")
+                html_lines.append(
+                    f"<div style='color: darkorange; font-weight: bold; padding: 2px;'>{line}</div>"
+                )
             else:
-                html_lines.append(f"<pre>{line}</pre>")
+                html_lines.append(
+                    f"<pre style='margin: 0; font-family: monospace;'>{line}</pre>"
+                )
         return "\n".join(html_lines)
 
     def generate_html_report(self):
@@ -520,7 +528,7 @@ class JSONReporter:
                 'skipped'
             )
             error_text = test.get("error", "")
-            error_html = self.format_error_with_diffs(error_text)
+            error_html = f"<pre>{self.format_error_with_diffs(error_text)}</pre>" if error_text else ""
             screenshot_path = self.find_screenshot_and_copy(test['test'])
             screenshot_html = f'<div class="details-screenshot"><img src="{screenshot_path}" alt="Screenshot" onclick="toggleFullscreen(this)"></div>' if screenshot_path else ""
             marker_str = ",".join(test.get("markers", []))

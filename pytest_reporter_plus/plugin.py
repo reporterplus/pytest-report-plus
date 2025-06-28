@@ -52,18 +52,13 @@ def pytest_runtest_makereport(item, call):
                 (capture_option == "failed" and report.outcome == "failed")
         )
 
-        if not should_capture_screenshot:
-            return
-
-        driver = resolve_driver(item)
-
-        if not driver:
-            return
-
-        try:
-            take_screenshot_generic(item, driver)
-        except Exception as e:
-            print(f"❌ Failed to capture screenshot: {e}")
+        if should_capture_screenshot:
+            driver = resolve_driver(item)
+            if driver:
+                try:
+                    screenshot_path = take_screenshot_generic(item, driver)
+                except Exception as e:
+                    print(f"❌ Failed to capture screenshot: {e}")
 
         reporter = config._json_reporter
         worker_id = os.getenv("PYTEST_XDIST_WORKER") or "main"
