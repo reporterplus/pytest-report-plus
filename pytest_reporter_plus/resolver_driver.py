@@ -3,7 +3,6 @@ def resolve_driver(item):
         if name in item.funcargs:
             return item.funcargs[name]
 
-    # Check request.node assignment (for manual tests)
     fallback = getattr(item, "page_for_screenshot", None)
     if fallback:
         return fallback

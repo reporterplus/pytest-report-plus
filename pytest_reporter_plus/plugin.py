@@ -39,7 +39,6 @@ def pytest_runtest_makereport(item, call):
     if report.when == "call" or (report.when == "setup" and report.skipped):
         config = item.config
         capture_option = config.getoption("--capture-screenshots")
-        tool = config.getoption("--automation-tool")
 
         caplog_text = None
         if "caplog" in item.funcargs:
@@ -159,13 +158,6 @@ def pytest_addoption(parser):
         action="store",
         default="playwright_report.json",
         help="Directory to save individual JSON test reports"
-    )
-    parser.addoption(
-        "--automation-tool",
-        action="store",
-        default="playwright",
-        choices=["selenium", "playwright", "other"],
-        help="Specify automation tool: selenium (default) or playwright"
     )
     parser.addoption(
         "--capture-screenshots",
