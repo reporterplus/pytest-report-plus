@@ -53,8 +53,9 @@ report.html – a clean, styled HTML report
 
 #### 🧩 Unified Test Reports: Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity.
 
-### Easily track Untracked test scenarios
+#### Easily track Untracked test scenarios
 
+![ScreenRecording2025-06-29at1 06 02AM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/af40622f-f548-44a5-982b-344c74a65e13)
 
 
 #### 🔄 Flaky Test Detection: Automatically flags flaky tests so you can spot and fix inconsistent failures quickly.
