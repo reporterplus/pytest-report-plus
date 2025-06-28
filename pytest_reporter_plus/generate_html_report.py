@@ -120,6 +120,9 @@ class JSONReporter:
         return None
 
     def format_error_with_diffs(self, error_text: str) -> str:
+        if not error_text:
+            return ""
+
         lines = html.escape(error_text).splitlines()
         html_lines = []
         for line in lines:
@@ -131,6 +134,10 @@ class JSONReporter:
             elif stripped.startswith("+"):
                 html_lines.append(
                     f"<div style='color: green; background-color: #eaffea; padding: 2px; border-left: 4px solid green;'>✅ {line}</div>"
+                )
+            elif stripped.startswith("E "):
+                html_lines.append(
+                    f"<div style='color: #d8000c; background-color: #fff2f2; padding: 2px; border-left: 4px solid #d8000c;'>{line}</div>"
                 )
             elif "AssertionError" in stripped:
                 html_lines.append(
