@@ -622,6 +622,5 @@ class JSONReporter:
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(html)
 
-
 if __name__ == "__main__":
     main()
