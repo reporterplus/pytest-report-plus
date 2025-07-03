@@ -58,7 +58,7 @@ def pytest_runtest_makereport(item, call):
                 try:
                     screenshot_path = take_screenshot_generic(item, driver)
                 except Exception as e:
-                    print(f"❌ Failed to capture screenshot: {e}")
+                    print(f"Failed to capture screenshot: {e}")
 
         reporter = config._json_reporter
         worker_id = os.getenv("PYTEST_XDIST_WORKER") or "main"
@@ -122,7 +122,7 @@ def pytest_sessionfinish(session, exitstatus):
             "--output", html_output
         ], check=True)
     except Exception as e:
-        print(f"❌ Exception during HTML report generation: {e}")
+        print(f"Exception during HTML report generation: {e}")
 
     if session.config.getoption("--send-email"):
         print("📬 --send-email enabled. Sending report...")
@@ -130,7 +130,7 @@ def pytest_sessionfinish(session, exitstatus):
             config = load_email_env()
             send_email_from_env(config)
         except Exception as e:
-            print(f"❌ Failed to send email: {e}")
+            print(f"Failed to send email: {e}")
 
     open_html_report(report_path=f"{html_output}/report.html",json_path=json_path, config=session.config)
 
@@ -297,5 +297,5 @@ def open_html_report(report_path, json_path, config):
            webbrowser.open(f"file://{os.path.abspath(report_path)}")
 
    except Exception as e:
-       print(f"⚠️ Could not open report: {e}")
+       print(f"Could not open report: {e}")
 
