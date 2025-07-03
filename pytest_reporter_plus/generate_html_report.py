@@ -578,7 +578,7 @@ class JSONReporter:
 
             html += f'''
     
-<div class="test test-card" data-name="{test['test']}" data-link="{','.join(test.get('links', []))}" data-markers="{marker_str}">
+<div class="test test-card" data-name="{test['test']}" data-link="{','.join(test.get('links') or [])}" data-markers="{marker_str}">
   <div class="header {status_class}" onclick="toggleDetails(this)">
     <div class="header-section test-info">
       <span class="toggle"></span>
