@@ -23,7 +23,7 @@ def main():
 
 
 class JSONReporter:
-    def __init__(self, report_path="playwright_report.json", screenshots_dir="screenshots", output_dir="report_output"):
+    def __init__(self, report_path="final_report.json", screenshots_dir="screenshots", output_dir="report_output"):
         self.parsed_data = None
         self.report_path = report_path
         self.screenshots_dir = screenshots_dir

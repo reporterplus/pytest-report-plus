@@ -87,7 +87,7 @@ import subprocess
 def pytest_sessionfinish(session, exitstatus):
     reporter = session.config._json_reporter
 
-    json_path = session.config.getoption("--json-report") or "playwright_report.json"
+    json_path = session.config.getoption("--json-report") or "final_report.json"
     html_output = session.config.getoption("--html-output") or "report_output"
     screenshots = session.config.getoption("--screenshots") or "screenshots"
     xml_path = session.config.getoption("--xml-report") or "final_xml.xml"
@@ -161,7 +161,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--json-report",
         action="store",
-        default="playwright_report.json",
+        default="final_report.json",
         help="Directory to save individual JSON test reports"
     )
     parser.addoption(
@@ -245,7 +245,7 @@ def pytest_configure(config):
     _saved_config = config
 
     INTERNAL_JSON_DIR = Path(".pytest_worker_jsons")
-    report_path = config.getoption("--json-report") or "playwright_report.json"
+    report_path = config.getoption("--json-report") or "final_report.json"
     worker_id = os.getenv("PYTEST_XDIST_WORKER")
 
     if worker_id:
