@@ -291,11 +291,17 @@ def mark_flaky_tests(results):
     final_results = []
     for nodeid, attempts in tests_by_nodeid.items():
         final_test = attempts[-1].copy()
-        if len(attempts) > 1:
+
+        previous_statuses = [t["status"] for t in attempts[:-1]]
+        final_status = final_test["status"]
+
+        # A test is flaky if it passed at the end but had at least one failure before
+        if final_status == "passed" and "failed" in previous_statuses:
             final_test["flaky"] = True
-            final_test["flaky_attempts"] = [t.get("status") for t in attempts]
+            final_test["flaky_attempts"] = [t["status"] for t in attempts]
         else:
             final_test["flaky"] = False
+
         final_results.append(final_test)
 
     return final_results
