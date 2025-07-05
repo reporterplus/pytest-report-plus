@@ -3,7 +3,7 @@ import os
 from collections import defaultdict
 
 
-def merge_json_reports(directory=".pytest_worker_jsons", output_path="playwright_report.json"):
+def merge_json_reports(directory=".pytest_worker_jsons", output_path="final_report.json"):
     all_tests = []
     for filename in sorted(os.listdir(directory)):
         if filename.endswith(".json"):
