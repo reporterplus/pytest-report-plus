@@ -1,6 +1,7 @@
 # 🧪 pytest-reporter-plus 
 
-A powerful, plug-and-play Pytest plugin to generate **HTML + JSON reports**, detect **flaky tests**, and optionally *
+#### 🧩 
+A powerful, plug-and-play unified Test Reports: Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity., detect **flaky tests**, and optionally *
 *send reports via email**. Works beautifully with or without `xdist`.
 
 [![PyPI Downloads](https://static.pepy.tech/badge/pytest-reporter-plus)](https://pepy.tech/projects/pytest-reporter-plus) ![PyPI](https://img.shields.io/pypi/v/pytest-reporter-plus) ![Python Versions](https://img.shields.io/pypi/pyversions/pytest-reporter-plus)  ![License](https://img.shields.io/pypi/l/pytest-reporter-plus)  [![Unit Tests](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml/badge.svg)](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml)
@@ -54,10 +55,8 @@ report.html – a clean, styled HTML report
 
 ## ✨ Features
 
-#### 🧩 Unified Test Reports: Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity.
-
 #### 🧩 Seamless Combined XML Export to your favourite test management tools — No Plugins Needed
-Export a fully merged JUnit XML report effortlessly — no external tools or plugins required.
+Export a fully merged JUnit XML report effortlessly — no external tools or plugins required. (No More merge html additional plugins or steps in your YAML to feed xml reports)
 
 ✔ Links, logs, stdout/stderr, and even flaky history — all included
 ✔ Works out-of-the-box with your test management tools (like TestRail, XRay, Zephyr)
