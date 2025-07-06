@@ -44,6 +44,9 @@ report.html – a clean, styled HTML report
 | `--screenshots`         | Directory where screenshots will be stored          | `screenshots`       | *Any valid directory*             |
 | `--send-email`          | Send HTML report via email after the test run       | `False`             | `True`, `False`                   |
 | `--should-open-report`  | Open your HTML report automatically post completion | `failed`            | `always`, `failed`, `never`       |
+| `--generate-xml`        |       Easily generate combined xml of all runs      |  `False`            | `False`, `True`   |
+| `--xml-report`          | Path to output the XML report (used with --generate-xml) |  `None`         |  *Any valid file path*    |
+
 
 ---
 
@@ -52,6 +55,17 @@ report.html – a clean, styled HTML report
 ## ✨ Features
 
 #### 🧩 Unified Test Reports: Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity.
+
+#### 🧩 Seamless Combined XML Export to your favourite test management tools — No Plugins Needed
+Export a fully merged JUnit XML report effortlessly — no external tools or plugins required.
+
+✔ Links, logs, stdout/stderr, and even flaky history — all included
+✔ Works out-of-the-box with your test management tools (like TestRail, XRay, Zephyr)
+✔ Just one flag. No extra lines of code. Total traceability.
+
+
+![ScreenRecording2025-07-06at11 38 21PM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/02da5cc9-7ef5-4a3a-a475-88907964a9c6)
+
 
 #### Easily track Untracked test scenarios
 
