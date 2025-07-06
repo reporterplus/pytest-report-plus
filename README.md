@@ -1,8 +1,6 @@
-# 🧪 pytest-reporter-plus 
+# 🧪 pytest-reporter-plus - A Single page, actionable, plug-and-play unified Test Reports:
 
-#### 🧩 
-A powerful, plug-and-play unified Test Reports: Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity., detect **flaky tests**, and optionally *
-*send reports via email**. Works beautifully with or without `xdist`.
+## Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity. Detect **flaky tests**, and optionally send reports via email**. Works beautifully with or without `xdist`.
 
 [![PyPI Downloads](https://static.pepy.tech/badge/pytest-reporter-plus)](https://pepy.tech/projects/pytest-reporter-plus) ![PyPI](https://img.shields.io/pypi/v/pytest-reporter-plus) ![Python Versions](https://img.shields.io/pypi/pyversions/pytest-reporter-plus)  ![License](https://img.shields.io/pypi/l/pytest-reporter-plus)  [![Unit Tests](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml/badge.svg)](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml)
 
