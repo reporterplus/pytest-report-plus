@@ -163,9 +163,11 @@ email_password=your_sendgrid_api_key
 pytest --send-email
 ```
 
-## 🤝 Contributions
+## Contributions
 
-PRs, issues, and feature requests are welcome! Let's make this tool more awesome together.
+We welcome pull requests, issues, and feature suggestions from the community. 
+Before contributing, please take a moment to review our contribution guidelines and code of conduct. 
+Your involvement helps make this tool better for everyone!
 
 ### Setting up the project is pretty simple
 
@@ -177,12 +179,6 @@ poetry install --dev
 poetry run pytest tests/ 
 ```
 
-## Motivation
-I’m building and maintaining this in my free time, and would really appreciate:
-
-⭐ Stars if you find it useful
-
-🐞 Bug reports, feedback, or PRs if you try it out
 
 ## 📜 License
 

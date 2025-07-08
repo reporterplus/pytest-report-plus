@@ -8,7 +8,6 @@ Fork and Clone
 ```
 git clone https://github.com/reach2jeyan/pytest-report-plus.git
 cd pytest-report-plus
-Install Dependencies
 ```
 
 ```
@@ -19,7 +18,12 @@ docker build -t pytest-reporter-plus .
 
 pytest
 
-✅ Before Sending a Pull Request
+### Before beginning to code 
+
+ - Branch out from 0.3.next version. If its not available, please create one. Your PR's must be against the versioned branch
+
+###Before Sending a Pull Request
+
  - All tests pass locally.
 
  - New features include test coverage.
@@ -30,7 +34,7 @@ pytest
 
  - PR focuses on a single, clear purpose.
 
-💡 What Can You Contribute?
+### What Can You Contribute?
 
 🐛 Bug fixes — Fix something broken or improve test stability.
 
@@ -40,7 +44,7 @@ pytest
 
 📝 Docs — Even typo corrections are appreciated!
 
-🧪 Code Style
+### Code Style
 
 Follow PEP8.
 
@@ -52,7 +56,7 @@ isort .
 
 ### 🧰 Plugin Philosophy
 
-- Keep it lightweight — no extra assets, charts, or JS-heavy dashboards.
+- Keep it lightweight — no extra assets, charts, or JS-heavy dashboards or even unnecessary css.
 
 - Require zero config — should work out-of-the-box.
 
@@ -67,5 +71,6 @@ isort .
 - Review others’ contributions kindly.
 
 ### 📜 License
+
 By contributing, you agree your code will be licensed under the same license as this repo (MIT or your chosen license).
 

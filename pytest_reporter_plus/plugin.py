@@ -130,6 +130,8 @@ def pytest_sessionfinish(session, exitstatus):
         print("📬 --send-email enabled. Sending report...")
         try:
             config = load_email_env()
+            report_path = html_output
+            config["report_path"] = f"{html_output}/report.html"
             send_email_from_env(config)
         except Exception as e:
             print(f"Failed to send email: {e}")
