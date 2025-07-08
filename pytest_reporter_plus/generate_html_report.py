@@ -619,12 +619,14 @@ class JSONReporter:
                 style="
                   cursor: pointer;
                   background: none;
-                  border: none;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
                   font-size: 1.2em;
-                  padding: 0;
+                  padding: 2px 4px;
                   line-height: 1;
+                  color: #555;
                 ">
-          📋
+          ⧉
         </button>
       </span>
       <span class="worker-id" style="background: #ddd; border-radius: 3px; padding: 2px 5px; font-size: 0.85em; font-weight: bold;">{test["worker"]}</span>
