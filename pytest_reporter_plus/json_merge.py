@@ -42,3 +42,5 @@ def merge_json_reports(directory=".pytest_worker_jsons", output_path="final_repo
            json.dump(merged_results, f, indent=2)
    except OSError as e:
        raise RuntimeError(f"Failed to write merged report to {output_path}: {e}") from e
+
+   
