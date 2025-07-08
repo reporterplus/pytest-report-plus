@@ -58,22 +58,16 @@ class TestMergeJsonReports:
         assert merged[0]["flaky"] is True
         assert set(merged[0]["flaky_attempts"]) == {"skipped", "passed"}
 
-    def test_ignores_invalid_json(self):
+    def test_raises_on_invalid_json(self):
         bad_path = os.path.join(self.test_dir, "broken.json")
         with open(bad_path, "w") as f:
             f.write("{ not valid json")
 
-        good_data = [{"nodeid": "test_x.py::test_y", "status": "passed"}]
-        self._write_json("good.json", good_data)
-
         output_path = os.path.join(self.test_dir, "merged.json")
-        merge_json_reports(directory=self.test_dir, output_path=output_path)
 
-        with open(output_path) as f:
-            merged = json.load(f)
+        with pytest.raises(ValueError, match="Could not parse broken.json"):
+            merge_json_reports(directory=self.test_dir, output_path=output_path)
 
-        assert len(merged) == 1
-        assert merged[0]["status"] == "passed"
 
     def test_non_flaky_test(self):
         data = [{"nodeid": "test_sample.py::test_stable", "status": "passed"}]
