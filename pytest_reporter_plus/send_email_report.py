@@ -1,6 +1,7 @@
 import os
 import smtplib
 from email.message import EmailMessage
+from email.utils import make_msgid
 
 def load_email_env(filepath="emailenv"):
     if not os.path.exists(filepath):
@@ -29,12 +30,12 @@ def send_email_from_env(config: dict):
     msg["From"] = sender
     msg["To"] = recipient
 
-    # Read report content
-    with open(report_path, "r") as f:
-        html_content = f.read()
+    msg.set_content("Your test report is attached as an HTML file.")
 
-    msg.set_content("Your test report is attached.")
-    msg.add_alternative(html_content, subtype="html")
+    filename = os.path.basename(report_path)
+    with open(report_path, "rb") as f:
+        report_data = f.read()
+    msg.add_attachment(report_data, maintype="text", subtype="html", filename=filename)
 
     try:
         if "sendgrid" in smtp_server.lower():
@@ -48,11 +49,8 @@ def send_email_from_env(config: dict):
             login_user = "apikey" if "sendgrid" in smtp_server.lower() else sender
             server.login(login_user, password)
             server.send_message(msg)
-            server.quit()
             print("****************************************************************")
-            print(f"{subject} is sent to {recipient} from {sender} successfully")
+            print(f"{subject} is sent to {recipient} from {sender} successfully with attachment: {filename}")
             print("****************************************************************")
     except Exception as e:
         print(f"Failed to send email: {e}")
-
-

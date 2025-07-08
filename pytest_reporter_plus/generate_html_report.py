@@ -182,6 +182,22 @@ class JSONReporter:
       .details-screenshot img {{width: 300px; height: 200px; object-fit: contain; border: 1px solid #ccc; border-radius: 3px; background: #f8f8f8; cursor: pointer; transition: transform 0.2s ease; transform: scale(1.05); }}
       .details-screenshot img:hover {{  transform: scale(1.05); }}
       
+      /* Handle content wrapping */
+      .details-text {{ 
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }}
+      
+      /* Special handling for links and pre-formatted text */
+      .details-text a {{ 
+        word-break: break-all; 
+      }}
+      .details-text pre {{ 
+        white-space: pre-wrap;
+        max-width: 100%;
+        word-break: break-all;  
+      }}
+    
       /* Mobile and tablet responsiveness */
       @media (max-width: 768px) {{
         .header {{ flex-direction: column; align-items: stretch; gap: 0.5rem; }}
@@ -194,6 +210,10 @@ class JSONReporter:
         .details-content {{ flex-direction: column; gap: 0.5rem; }}
         .details-screenshot {{ align-self: center; }}
         .details-screenshot img {{ width: 100%; max-width: 300px; height: auto; min-height: 150px; }}
+        
+        /* For Mobile URL handling */
+        .header a {{ max-width: 100px; }}
+        .nodeid-badge code {{ max-width: 200px; }}
       }}
       
       @media (max-width: 480px) {{
@@ -219,6 +239,10 @@ class JSONReporter:
       .badges-and-timing {{ justify-content: flex-end; flex-wrap: wrap; }}
       .timestamp {{ white-space: nowrap; font-weight: bold; }}
       .badges-and-timing > * {{ margin-left: 24px; }}
+      
+      /* Handle long URLs in header links */
+      .header a {{ word-break: break-all; overflow-wrap: break-word; max-width: 150px; display: inline-block; }}
+      .nodeid-badge code {{ word-break: break-all; overflow-wrap: break-word; max-width: 300px; }}
     </style>
 
     <script>
@@ -595,12 +619,14 @@ class JSONReporter:
                 style="
                   cursor: pointer;
                   background: none;
-                  border: none;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
                   font-size: 1.2em;
-                  padding: 0;
+                  padding: 2px 4px;
                   line-height: 1;
+                  color: #555;
                 ">
-          📋
+          ⧉
         </button>
       </span>
       <span class="worker-id" style="background: #ddd; border-radius: 3px; padding: 2px 5px; font-size: 0.85em; font-weight: bold;">{test["worker"]}</span>
