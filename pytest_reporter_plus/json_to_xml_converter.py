@@ -84,7 +84,8 @@ def convert_json_to_junit_xml(json_path, xml_path):
                 "value": str(log)
             })
 
-    # Write XML to file
-    tree = ET.ElementTree(testsuite)
-    tree.write(xml_path, encoding="utf-8", xml_declaration=True)
-    print(f"XML report generated at: {xml_path}")
+    try:
+        tree = ET.ElementTree(testsuite)
+        tree.write(xml_path, encoding="utf-8", xml_declaration=True)
+    except OSError as e:
+        raise RuntimeError(f"Failed to write XML report to {xml_path}: {e}") from e

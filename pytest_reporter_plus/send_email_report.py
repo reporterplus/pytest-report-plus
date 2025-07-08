@@ -53,4 +53,4 @@ def send_email_from_env(config: dict):
             print(f"{subject} is sent to {recipient} from {sender} successfully with attachment: {filename}")
             print("****************************************************************")
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        raise RuntimeError(f"Failed to send email: {e}") from e

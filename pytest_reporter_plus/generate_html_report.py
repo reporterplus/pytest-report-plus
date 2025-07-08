@@ -87,8 +87,8 @@ class JSONReporter:
         try:
             with open(self.report_path, "w", encoding="utf-8") as f:
                 json.dump(self.results, f, indent=2)
-        except Exception as e:
-            print(f"Failed to write JSON report ")
+        except OSError as e:
+            raise RuntimeError(f"Failed to write JSON report: {e}") from e
 
     def copy_all_screenshots(self):
         screenshots_output_dir = os.path.join(self.output_dir, "screenshots")
