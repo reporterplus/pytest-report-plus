@@ -15,8 +15,8 @@ def merge_json_reports(directory=".pytest_worker_jsons", output_path="final_repo
                        all_tests.extend(data)
                    elif isinstance(data, dict) and "results" in data:
                        all_tests.extend(data["results"])
-               except Exception as e:
-                   print(f"Could not parse {filename}: {e}")
+               except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                   raise ValueError(f"Could not parse {filename}: {e}") from e
 
    # Group tests by nodeid
    tests_by_nodeid = defaultdict(list)
@@ -40,5 +40,5 @@ def merge_json_reports(directory=".pytest_worker_jsons", output_path="final_repo
    try:
        with open(output_path, "w") as f:
            json.dump(merged_results, f, indent=2)
-   except Exception as e:
-       print(f" Failed to write merged report to {output_path}: {e}")
+   except OSError as e:
+       raise RuntimeError(f"Failed to write merged report to {output_path}: {e}") from e

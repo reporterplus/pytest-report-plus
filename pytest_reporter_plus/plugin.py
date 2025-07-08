@@ -14,6 +14,7 @@ from pytest_reporter_plus.send_email_report import send_email_from_env, load_ema
 python_executable = shutil.which("python3") or shutil.which("python")
 test_screenshot_paths = {}
 
+
 import logging
 
 logger = logging.getLogger()
@@ -59,7 +60,7 @@ def pytest_runtest_makereport(item, call):
                 try:
                     screenshot_path = take_screenshot_generic(item, driver)
                 except Exception as e:
-                    print(f"Failed to capture screenshot: {e}")
+                    raise RuntimeError(f"Failed to capture screenshot: {e}") from e
 
         reporter = config._json_reporter
         worker_id = os.getenv("PYTEST_XDIST_WORKER") or "main"
@@ -112,7 +113,7 @@ def pytest_sessionfinish(session, exitstatus):
     script_path = os.path.join(os.path.dirname(__file__), "generate_html_report.py")
 
     if not os.path.exists(script_path):
-        print(f"Warning: Report generation script not found at {script_path}. Skipping HTML report generation.")
+        logger.warning(f"Report generation script not found at {script_path}. Skipping HTML report generation.")
         return
 
     try:
@@ -124,17 +125,16 @@ def pytest_sessionfinish(session, exitstatus):
             "--output", html_output
         ], check=True)
     except Exception as e:
-        print(f"Exception during HTML report generation: {e}")
+        raise RuntimeError(f"Exception during HTML report generation: {e}") from e
 
     if session.config.getoption("--send-email"):
         print("📬 --send-email enabled. Sending report...")
         try:
             config = load_email_env()
-            report_path = html_output
             config["report_path"] = f"{html_output}/report.html"
             send_email_from_env(config)
         except Exception as e:
-            print(f"Failed to send email: {e}")
+            raise RuntimeError(f"Failed to send email: {e}") from e
 
     open_html_report(report_path=f"{html_output}/report.html",json_path=json_path, config=session.config)
 
@@ -144,7 +144,7 @@ def pytest_sessionfinish(session, exitstatus):
             convert_json_to_junit_xml(json_path, xml_path)
             print(f"XML report generated: {xml_path}")
         except Exception as e:
-            print(f"Failed to generate XML report: {e}")
+            raise RuntimeError(f"Failed to generate XML report: {e}") from e
 
 
 def pytest_sessionstart(session):
@@ -308,25 +308,30 @@ def mark_flaky_tests(results):
 
     return final_results
 
-def open_html_report(report_path, json_path, config):
-   should_open = config.getoption("--should-open-report", default="failed").lower()
+def open_html_report(report_path: str, json_path: str, config) -> None:
+    if os.environ.get("CI") == "true":
+        return
 
-   if not report_path or not os.path.exists(report_path):
-       return
+    should_open = config.getoption("--should-open-report", default="failed").lower()
 
-   try:
-       with open(json_path, "r") as f:
-           import json
-           report_data = json.load(f)
+    if not report_path or not os.path.exists(report_path):
+        return
 
-       has_failures = any(
-           t.get("status") == "failed" or t.get("error")
-           for t in report_data
-       )
+    try:
+        with open(json_path, "r", encoding="utf-8") as f:
+            report_data = json.load(f)
 
-       if should_open == "always" or (should_open == "failed" and has_failures):
-           webbrowser.open(f"file://{os.path.abspath(report_path)}")
+        has_failures = any(
+            t.get("status") == "failed" or t.get("error")
+            for t in report_data
+        )
 
-   except Exception as e:
-       print(f"Could not open report: {e}")
+        if should_open == "always" or (should_open == "failed" and has_failures):
+            webbrowser.open(f"file://{os.path.abspath(report_path)}")
+
+    except Exception as e:
+        try:
+            logger.warning(f"Could not open report in browser: {e}")
+        except Exception:
+            print(f"Could not open report in browser: {e}")
 

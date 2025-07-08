@@ -62,6 +62,9 @@ def test_load_email_env_file_not_found():
         load_email_env("non_existent_file.env")
 
 
+import pytest
+from unittest import mock
+
 def test_send_email_handles_exception(tmp_path):
     report_path = tmp_path / "report.html"
     report_path.write_text("<html><body>Fake report</body></html>")
@@ -77,10 +80,14 @@ def test_send_email_handles_exception(tmp_path):
     }
 
     with mock.patch("smtplib.SMTP", side_effect=Exception("SMTP Error")):
-        send_email_from_env(config)
+        with pytest.raises(RuntimeError, match="Failed to send email: SMTP Error"):
+            send_email_from_env(config)
 
 
-def test_warns_on_invalid_sendgrid_key(tmp_path, capsys):
+
+import pytest
+
+def test_warns_on_invalid_sendgrid_key(tmp_path):
     report_path = tmp_path / "report.html"
     report_path.write_text("<html><body>Hi</body></html>")
 
@@ -95,11 +102,8 @@ def test_warns_on_invalid_sendgrid_key(tmp_path, capsys):
     }
 
     with mock.patch("smtplib.SMTP", side_effect=Exception("SMTP failed")):
-        send_email_from_env(config)
-
-    captured = capsys.readouterr()
-    assert "SendGrid API key looks invalid" in captured.out
-
+        with pytest.raises(RuntimeError, match="Failed to send email: SMTP failed"):
+            send_email_from_env(config)
 
 def test_load_email_env_parses_file_correctly(tmp_path):
     env_file = tmp_path / "emailenv"

@@ -1,23 +1,32 @@
 [tool.poetry]
 name = "pytest-reporter-plus"
-version = "0.3.1"
+version = "0.3.2"
 description = "Lightweight enhanced HTML reporter for Pytest"
 readme = "README.md"
 authors = ["Emjey", "Karan"]
 license = "MIT"
 packages = [{ include = "pytest_reporter_plus" }]
 keywords = [
-    "html",
     "pytest",
-    "report",
-    "testing",
-    "testmamagement",
-    "testreport"
+    "html-report",
+    "pytest-plugin",
+    "test-report",
+    "test-results",
+    "test-summary",
+    "reporting",
+    "python-testing",
+    "automated-testing",
+    "test-runner",
+    "report-generator",
+    "continuous-integration",
+    "ci-cd",
+    "pytest-html",
+    "pytest-report"
 ]
 
-urls.Homepage = "https://github.com/reach2jeyan/pytest-report-plus"
-urls.Source = "https://github.com/reach2jeyan/pytest-report-plus"
-urls.Tracker = "https://github.com/reach2jeyan/pytest-report-plus/issues"
+urls.Homepage = "https://github.com/reporterplus/pytest-report-plus"
+urls.Source = "https://github.com/reporterplus/pytest-report-plus"
+urls.Tracker = "https://github.com/reporterplus/pytest-report-plus/issues"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
