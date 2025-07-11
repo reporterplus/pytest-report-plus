@@ -48,7 +48,7 @@ def pytest_runtest_makereport(item, call):
            caplog = item.funcargs["caplog"]
            caplog_text = "\n".join(caplog.messages) if caplog.messages else None
 
-       screenshot_path = None
+       screenshot_path = config.getoption("--screenshots") or "screenshots"
 
        should_capture_screenshot = (
                capture_option == "all" or
@@ -59,7 +59,7 @@ def pytest_runtest_makereport(item, call):
            driver = resolve_driver(item)
            if driver:
                try:
-                   screenshot_path = take_screenshot_generic
+                   screenshot_path = take_screenshot_generic(screenshot_path, item, driver)
                except Exception as e:
                    raise RuntimeError(f"Failed to capture screenshot: {e}") from e
 
