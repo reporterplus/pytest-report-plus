@@ -56,11 +56,13 @@ def test_take_screenshot_with_screenshot_method(mock_makedirs):
     item = Mock()
     item.name = "test_case_passes"
 
-    path = take_screenshot_generic(item, mock_driver)
+    path = take_screenshot_generic("screenshots", item, mock_driver)
 
     expected_path = "screenshots/test_case_passes_failure.png"
     mock_driver.screenshot.assert_called_once_with(path=expected_path)
     assert path == expected_path
+    mock_makedirs.assert_called_once_with("screenshots", exist_ok=True)
+
 
 
 @patch("os.makedirs")
@@ -72,7 +74,7 @@ def test_take_screenshot_with_save_screenshot_method(mock_makedirs):
     item = Mock()
     item.name = "test_case_with_save_screenshot"
 
-    path = take_screenshot_generic(item, mock_driver)
+    path = take_screenshot_generic("screenshots", item, mock_driver)
 
     expected_path = "screenshots/test_case_with_save_screenshot_failure.png"
     mock_driver.save_screenshot.assert_called_once_with(expected_path)
@@ -86,7 +88,7 @@ def test_take_screenshot_raises_on_invalid_driver(mock_makedirs):
     item.name = "test_case_fails"
 
     try:
-        take_screenshot_generic(item, mock_driver)
+        take_screenshot_generic("screenshots", item, mock_driver)
     except RuntimeError as e:
         assert "no screenshot method" in str(e)
     else:

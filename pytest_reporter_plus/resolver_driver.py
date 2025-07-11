@@ -17,8 +17,8 @@ def resolve_driver(item):
 
 import os
 
-def take_screenshot_generic(item, driver):
-    os.makedirs("screenshots", exist_ok=True)
+def take_screenshot_generic(path, item, driver):
+    os.makedirs(path, exist_ok=True)
     filename = f"screenshots/{item.name}_failure.png"
 
     if hasattr(driver, "screenshot"):
