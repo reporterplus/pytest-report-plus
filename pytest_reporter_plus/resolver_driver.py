@@ -19,7 +19,7 @@ import os
 
 def take_screenshot_generic(path, item, driver):
     os.makedirs(path, exist_ok=True)
-    filename = f"{path}/{item.name}_failure.png"
+    filename = os.path.join(path, f"{item.name}_failure.png")
 
     if hasattr(driver, "screenshot"):
         driver.screenshot(path=filename)
