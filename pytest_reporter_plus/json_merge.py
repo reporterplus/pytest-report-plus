@@ -1,6 +1,7 @@
 import json
 import os
 from collections import defaultdict
+from pytest_reporter_plus.compute_filter_counts import compute_filter_count
 
 
 def merge_json_reports(directory=".pytest_worker_jsons", output_path="final_report.json"):
@@ -37,10 +38,16 @@ def merge_json_reports(directory=".pytest_worker_jsons", output_path="final_repo
 
        merged_results.append(final_test)
 
+   report_data = {
+       "filters": compute_filter_count(merged_results),
+       "results": merged_results
+   }
+
    try:
-       with open(output_path, "w") as f:
-           json.dump(merged_results, f, indent=2)
+       with open(output_path, "w", encoding="utf-8") as f:
+           json.dump(report_data, f, indent=2)
    except OSError as e:
        raise RuntimeError(f"Failed to write merged report to {output_path}: {e}") from e
+
 
    

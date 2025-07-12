@@ -4,6 +4,9 @@ import os
 import shutil
 from datetime import datetime
 import html
+from sys import path
+
+from pytest_reporter_plus.compute_filter_counts import compute_filter_count
 
 
 def main():
@@ -24,6 +27,7 @@ def main():
 
 class JSONReporter:
     def __init__(self, report_path="final_report.json", screenshots_dir="screenshots", output_dir="report_output"):
+        self.filters = None
         self.parsed_data = None
         self.report_path = report_path
         self.screenshots_dir = screenshots_dir
@@ -37,7 +41,15 @@ class JSONReporter:
 
     def load_report(self):
         with open(self.report_path) as f:
-            self.results = json.load(f)
+            data = json.load(f)
+        if isinstance(data, dict) and "results" in data:
+            self.results = data["results"]
+            self.filters = data.get("filters", {})
+        elif isinstance(data, list):
+            self.results = data
+            self.filters = {}
+        else:
+            raise ValueError("Unexpected report format.")
 
     def log_result(
             self,
@@ -84,11 +96,17 @@ class JSONReporter:
         if dir_path and not os.path.exists(dir_path):
             os.makedirs(dir_path, exist_ok=True)
 
+
+        data = {
+            "filters": compute_filter_count(self.results),
+            "results": self.results
+        }
+
         try:
-            with open(self.report_path, "w", encoding="utf-8") as f:
-                json.dump(self.results, f, indent=2)
-        except OSError as e:
-            raise RuntimeError(f"Failed to write JSON report: {e}") from e
+            with open(self.report_path, "w") as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            raise RuntimeError(f"Failed to write report to '{path}': {e}") from e
 
     def copy_all_screenshots(self):
         screenshots_output_dir = os.path.join(self.output_dir, "screenshots")
@@ -471,10 +489,14 @@ class JSONReporter:
     </head>
     <body>
     <div id="fullscreen-overlay" class="fullscreen-overlay" onclick="closeFullscreen()"></div>
+    <script>
+     const filters = report.filters || {{}};
+     document.getElementById("failed-count").textContent = filters.failed || 0;
+    </script>
     <div class="checkbox-container">
       <label>
         <input type="checkbox" id="failedOnlyCheckbox" />
-        Show only failed tests
+        Show only failed tests (<span id="failed-count"></span>)
       </label>
       <label>
         <input type="checkbox" id="skippedOnlyCheckbox" />
@@ -544,6 +566,7 @@ class JSONReporter:
     <div id="markersFilter" class="marker-filter" style="margin-bottom: 1rem;">
       <strong>Filter by Markers:</strong><br/>
     """
+
 
         # Add checkboxes for all markers
         for marker in sorted(all_markers):

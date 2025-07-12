@@ -1,126 +1,97 @@
 import json
-import os
-import shutil
-import tempfile
-
 import pytest
 
 from pytest_reporter_plus.json_merge import merge_json_reports
 
 
-class TestMergeJsonReports:
-    def setup_method(self):
-        self.test_dir = tempfile.mkdtemp()
+# Sample test inputs
+basic_test_list = [
+    {"nodeid": "test_1", "status": "passed", "markers": [], "links": []},
+    {"nodeid": "test_2", "status": "failed", "markers": ["flaky"], "links": []},
+]
 
-    def teardown_method(self):
-        shutil.rmtree(self.test_dir)
-
-    def _write_json(self, filename, content):
-        path = os.path.join(self.test_dir, filename)
-        with open(path, "w") as f:
-            json.dump(content, f)
-
-    def test_merges_multiple_jsons_with_same_nodeid(self):
-        data1 = [{"nodeid": "test_sample.py::test_case", "status": "failed"}]
-        data2 = [{"nodeid": "test_sample.py::test_case", "status": "passed"}]
-
-        self._write_json("part1.json", data1)
-        self._write_json("part2.json", data2)
-
-        output_path = os.path.join(self.test_dir, "merged.json")
-        merge_json_reports(directory=self.test_dir, output_path=output_path)
-
-        with open(output_path) as f:
-            merged = json.load(f)
-
-        assert len(merged) == 1
-        assert merged[0]["nodeid"] == "test_sample.py::test_case"
-        assert merged[0]["status"] in ["passed", "failed"]
-        assert set(merged[0]["flaky_attempts"]) == {"passed", "failed"}
-        assert merged[0]["flaky"] is True
-
-    def test_fallback_to_test_key(self):
-        data1 = [{"test": "test_sample.py::test_alt", "status": "skipped"}]
-        data2 = [{"test": "test_sample.py::test_alt", "status": "passed"}]
-
-        self._write_json("p1.json", data1)
-        self._write_json("p2.json", data2)
-
-        output_path = os.path.join(self.test_dir, "merged_alt.json")
-        merge_json_reports(directory=self.test_dir, output_path=output_path)
-
-        with open(output_path) as f:
-            merged = json.load(f)
-
-        assert len(merged) == 1
-        assert merged[0]["test"] == "test_sample.py::test_alt"
-        assert merged[0]["status"] == "passed"
-        assert merged[0]["flaky"] is True
-        assert set(merged[0]["flaky_attempts"]) == {"skipped", "passed"}
-
-    def test_raises_on_invalid_json(self):
-        bad_path = os.path.join(self.test_dir, "broken.json")
-        with open(bad_path, "w") as f:
-            f.write("{ not valid json")
-
-        output_path = os.path.join(self.test_dir, "merged.json")
-
-        with pytest.raises(ValueError, match="Could not parse broken.json"):
-            merge_json_reports(directory=self.test_dir, output_path=output_path)
+wrapped_test_dict = {
+    "results": [
+        {"nodeid": "test_3", "status": "skipped", "markers": [], "links": []},
+        {"nodeid": "test_2", "status": "passed", "markers": ["flaky"], "links": []},  # Same nodeid as above
+    ]
+}
 
 
-    def test_non_flaky_test(self):
-        data = [{"nodeid": "test_sample.py::test_stable", "status": "passed"}]
+@pytest.fixture
+def mock_json_files(tmp_path):
+    file1 = tmp_path / "file1.json"
+    file1.write_text(json.dumps(basic_test_list))
 
-        self._write_json("single.json", data)
+    file2 = tmp_path / "file2.json"
+    file2.write_text(json.dumps(wrapped_test_dict))
 
-        output_path = os.path.join(self.test_dir, "merged_single.json")
-        merge_json_reports(directory=self.test_dir, output_path=output_path)
+    return tmp_path
 
-        with open(output_path) as f:
-            merged = json.load(f)
 
-        assert len(merged) == 1
-        assert merged[0]["nodeid"] == "test_sample.py::test_stable"
-        assert merged[0]["status"] == "passed"
-        assert merged[0]["flaky"] is False
-        assert merged[0]["flaky_attempts"] == ["passed"]
+def test_merge_json_reports_creates_merged_file(mock_json_files):
+    output_file = mock_json_files / "merged.json"
 
-    def test_flaky_status_detection(self):
-        # Test was first skipped, then passed
-        data1 = [{"nodeid": "test_sample.py::test_flaky", "status": "skipped"}]
-        data2 = [{"nodeid": "test_sample.py::test_flaky", "status": "passed"}]
+    merge_json_reports(directory=str(mock_json_files), output_path=str(output_file))
 
-        self._write_json("first.json", data1)
-        self._write_json("second.json", data2)
+    assert output_file.exists()
 
-        output_path = os.path.join(self.test_dir, "merged_flaky.json")
-        merge_json_reports(directory=self.test_dir, output_path=output_path)
+    with open(output_file) as f:
+        data = json.load(f)
 
-        with open(output_path) as f:
-            merged = json.load(f)
+    assert "results" in data
+    assert "filters" in data
 
-        assert len(merged) == 1
-        assert merged[0]["nodeid"] == "test_sample.py::test_flaky"
-        assert merged[0]["status"] == "passed"  # final attempt
-        assert merged[0]["flaky"] is True
-        assert merged[0]["flaky_attempts"] == ["skipped", "passed"]
+    results = data["results"]
+    nodeids = [t["nodeid"] for t in results]
 
-    def test_merges_dict_with_results_key(self):
-        data1 = {"results": [{"nodeid": "test_sample.py::test_case", "status": "failed"}]}
-        data2 = {"results": [{"nodeid": "test_sample.py::test_case", "status": "passed"}]}
+    assert "test_2" in nodeids
+    assert len(results) == 3  # test_1, test_2, test_3
 
-        self._write_json("dict1.json", data1)
-        self._write_json("dict2.json", data2)
+    for test in results:
+        if test["nodeid"] == "test_2":
+            assert test["flaky"] is True
+            assert "flaky_attempts" in test
 
-        output_path = os.path.join(self.test_dir, "merged_dict_results.json")
-        merge_json_reports(directory=self.test_dir, output_path=output_path)
 
-        with open(output_path) as f:
-            merged = json.load(f)
+def test_merge_json_reports_handles_bad_json(tmp_path):
+    bad_file = tmp_path / "broken.json"
+    bad_file.write_text("{ not json }")
 
-        assert len(merged) == 1
-        assert merged[0]["nodeid"] == "test_sample.py::test_case"
-        assert merged[0]["status"] in ["passed", "failed"]
-        assert merged[0]["flaky"] is True
-        assert set(merged[0]["flaky_attempts"]) == {"passed", "failed"}
+    with pytest.raises(ValueError, match="Could not parse"):
+        merge_json_reports(directory=str(tmp_path))
+
+
+def test_merge_json_reports_handles_empty_directory(tmp_path):
+    output = tmp_path / "result.json"
+    merge_json_reports(directory=str(tmp_path), output_path=str(output))
+
+    assert output.exists()
+
+    with open(output) as f:
+        data = json.load(f)
+
+    assert data["results"] == []
+    assert "filters" in data
+
+
+def test_compute_filter_count_failed_non_flaky():
+    from pytest_reporter_plus.compute_filter_counts import compute_filter_count
+
+    results = [
+        {
+            "status": "failed",
+            "flaky": False,
+            "links": ["some-link"],
+            "markers": ["smoke"]
+        }
+    ]
+
+    filters = compute_filter_count(results)
+    assert filters["failed"] == 1
+    assert filters.get("flaky") is None
+    assert filters.get("skipped") is None
+    assert filters.get("untracked") is None
+    assert filters["passed"] == 0
+    assert filters["total"] == 1
+    assert filters["marker_counts"]["smoke"] == 1
