@@ -155,7 +155,6 @@ Create an emailenv file in your project folder that has the following
 ```commandline
 sender_email=you@example.com
 recipient_email=team@example.com
-report_path=report.html
 subject=Your Test Report
 smtp_server=smtp.sendgrid.net
 smtp_port=587
