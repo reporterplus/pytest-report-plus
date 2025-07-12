@@ -3,6 +3,12 @@ import smtplib
 from email.message import EmailMessage
 from email.utils import make_msgid
 
+import shutil
+
+def zip_report_folder(folder_path: str, output_zip: str):
+    shutil.make_archive(output_zip.replace(".zip", ""), 'zip', folder_path)
+    return output_zip
+
 def load_email_env(filepath="emailenv"):
     if not os.path.exists(filepath):
         raise FileNotFoundError("emailenv file not found!")
@@ -25,6 +31,8 @@ def send_email_from_env(config: dict):
     password = config["email_password"]
     use_tls = True
 
+    zip_path = zip_report_folder(report_path, f"{report_path}_zipped" + ".zip")
+
     msg = EmailMessage()
     msg["Subject"] = subject
     msg["From"] = sender
@@ -32,10 +40,10 @@ def send_email_from_env(config: dict):
 
     msg.set_content("Your test report is attached as an HTML file.")
 
-    filename = os.path.basename(report_path)
-    with open(report_path, "rb") as f:
+    filename = os.path.basename(zip_path)
+    with open(zip_path, "rb") as f:
         report_data = f.read()
-    msg.add_attachment(report_data, maintype="text", subtype="html", filename=filename)
+    msg.add_attachment(report_data, maintype="application", subtype="zip", filename=filename)
 
     try:
         if "sendgrid" in smtp_server.lower():
