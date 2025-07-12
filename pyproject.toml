@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pytest-reporter-plus"
-version = "0.3.2"
+version = "0.3.3"
 description = "Lightweight enhanced HTML reporter for Pytest"
 readme = "README.md"
 authors = ["Emjey", "Karan"]
