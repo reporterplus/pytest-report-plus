@@ -1,93 +1,129 @@
-import os
-from unittest.mock import Mock, patch, call
-from pytest_reporter_plus.resolver_driver import resolve_driver, take_screenshot_generic
+from unittest.mock import Mock
+from pytest_reporter_plus.resolver_driver import resolve_driver
 
-# ----------------------
-# Tests for resolve_driver
-# ----------------------
 
-def test_resolve_driver_from_funcargs_priority_order():
+def test_resolve_driver_prefers_page_over_others():
     mock_driver = object()
     item = Mock()
     item.funcargs = {"page": mock_driver, "driver": object(), "browser": object()}
     assert resolve_driver(item) is mock_driver
 
-def test_resolve_driver_from_driver_funcarg():
+
+def test_resolve_driver_fallback_to_driver():
     mock_driver = object()
     item = Mock()
     item.funcargs = {"driver": mock_driver}
     assert resolve_driver(item) is mock_driver
 
-def test_resolve_driver_from_browser_funcarg():
+
+def test_resolve_driver_fallback_to_browser():
     mock_driver = object()
     item = Mock()
     item.funcargs = {"browser": mock_driver}
     assert resolve_driver(item) is mock_driver
 
-def test_resolve_driver_from_page_for_screenshot():
+
+def test_resolve_driver_uses_page_for_screenshot_attr():
     mock_driver = object()
     item = Mock()
     item.funcargs = {}
     item.page_for_screenshot = mock_driver
     assert resolve_driver(item) is mock_driver
 
-def test_resolve_driver_fallback_has_screenshot_method():
+
+def test_resolve_driver_fallback_on_object_with_screenshot_method():
     mock_driver = Mock()
     mock_driver.screenshot = Mock()
     item = Mock()
-    item.funcargs = {"something": mock_driver}
+    item.funcargs = {"custom": mock_driver}
     item.page_for_screenshot = None
     assert resolve_driver(item) is mock_driver
 
-def test_resolve_driver_none_found():
+
+def test_resolve_driver_fallback_on_object_with_save_screenshot():
+    mock_driver = Mock()
+    mock_driver.save_screenshot = Mock()
+    item = Mock()
+    item.funcargs = {"custom": mock_driver}
+    item.page_for_screenshot = None
+    assert resolve_driver(item) is mock_driver
+
+
+def test_resolve_driver_returns_none_when_no_match():
     item = Mock()
     item.funcargs = {"x": object()}
     item.page_for_screenshot = None
     assert resolve_driver(item) is None
 
-# ----------------------
-# Tests for take_screenshot_generic
-# ----------------------
+import os
+from unittest.mock import Mock, patch
+from pytest_reporter_plus.resolver_driver import take_screenshot_generic
+
 
 @patch("os.makedirs")
 def test_take_screenshot_with_screenshot_method(mock_makedirs):
     mock_driver = Mock()
     mock_driver.screenshot = Mock()
     item = Mock()
-    item.name = "test_case_passes"
+    item.name = "test_case"
 
-    path = take_screenshot_generic(item, mock_driver)
+    result = take_screenshot_generic("screenshots", item, mock_driver)
 
-    expected_path = "screenshots/test_case_passes_failure.png"
+    expected_path = os.path.join("screenshots", "test_case_failure.png")
+    mock_makedirs.assert_called_once_with("screenshots", exist_ok=True)
     mock_driver.screenshot.assert_called_once_with(path=expected_path)
-    assert path == expected_path
+    assert result == expected_path
 
 
 @patch("os.makedirs")
 def test_take_screenshot_with_save_screenshot_method(mock_makedirs):
     mock_driver = Mock()
-    delattr(mock_driver, "screenshot")  # Ensure 'screenshot' is not there
+    if hasattr(mock_driver, "screenshot"):
+        delattr(mock_driver, "screenshot")
     mock_driver.save_screenshot = Mock()
 
     item = Mock()
-    item.name = "test_case_with_save_screenshot"
+    item.name = "test_case"
 
-    path = take_screenshot_generic(item, mock_driver)
+    result = take_screenshot_generic("screenshots", item, mock_driver)
 
-    expected_path = "screenshots/test_case_with_save_screenshot_failure.png"
+    expected_path = os.path.join("screenshots", "test_case_failure.png")
+    mock_makedirs.assert_called_once_with("screenshots", exist_ok=True)
     mock_driver.save_screenshot.assert_called_once_with(expected_path)
-    assert path == expected_path
+    assert result == expected_path
 
 
 @patch("os.makedirs")
 def test_take_screenshot_raises_on_invalid_driver(mock_makedirs):
-    mock_driver = object()
+    mock_driver = object()  # No screenshot or save_screenshot
     item = Mock()
-    item.name = "test_case_fails"
+    item.name = "test_invalid"
 
     try:
-        take_screenshot_generic(item, mock_driver)
+        take_screenshot_generic("screenshots", item, mock_driver)
     except RuntimeError as e:
         assert "no screenshot method" in str(e)
     else:
         assert False, "Expected RuntimeError was not raised"
+
+
+from unittest.mock import Mock, patch
+from pytest_reporter_plus.plugin import take_screenshot_generic
+
+
+@patch("pytest_reporter_plus.plugin.os.makedirs")
+@patch("pytest_reporter_plus.plugin.os.path.join", return_value="custom_dir/custom_file.png")
+def test_take_screenshot_with_custom_path(mock_join, mock_makedirs):
+    mock_driver = Mock()
+    mock_driver.screenshot = Mock()
+
+    item = Mock()
+    item.name = "custom_test"
+
+    path = take_screenshot_generic("custom_dir", item, mock_driver)
+
+    mock_makedirs.assert_called_once_with("custom_dir", exist_ok=True)
+    mock_join.assert_called_once_with("custom_dir", "custom_test_failure.png")
+    mock_driver.screenshot.assert_called_once_with(path="custom_dir/custom_file.png")
+    assert path == "custom_dir/custom_file.png"
+

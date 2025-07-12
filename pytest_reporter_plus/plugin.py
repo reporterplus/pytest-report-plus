@@ -48,7 +48,7 @@ def pytest_runtest_makereport(item, call):
            caplog = item.funcargs["caplog"]
            caplog_text = "\n".join(caplog.messages) if caplog.messages else None
 
-       screenshot_path = None
+       screenshot_path = config.getoption("--screenshots") or "screenshots"
 
        should_capture_screenshot = (
                capture_option == "all" or
@@ -59,7 +59,7 @@ def pytest_runtest_makereport(item, call):
            driver = resolve_driver(item)
            if driver:
                try:
-                   screenshot_path = take_screenshot_generic(item, driver)
+                   screenshot_path = take_screenshot_generic(screenshot_path, item, driver)
                except Exception as e:
                    raise RuntimeError(f"Failed to capture screenshot: {e}") from e
 
@@ -91,7 +91,7 @@ def pytest_sessionfinish(session, exitstatus):
 
    json_path = session.config.getoption("--json-report") or "final_report.json"
    html_output = session.config.getoption("--html-output") or "report_output"
-   screenshots = session.config.getoption("--screenshots") or "screenshots"
+   screenshots_path = session.config.getoption("--screenshots") or "screenshots"
    xml_path = session.config.getoption("--xml-report") or "final_xml.xml"
 
    is_worker = os.getenv("PYTEST_XDIST_WORKER") is not None
@@ -122,7 +122,7 @@ def pytest_sessionfinish(session, exitstatus):
            sys.executable,
            script_path,
            "--report", json_path,
-           "--screenshots", screenshots,
+           "--screenshots", screenshots_path,
            "--output", html_output
        ], check=True)
    except Exception as e:
@@ -207,24 +207,6 @@ def pytest_addoption(parser):
        default=None,
        help="Path to output the XML report (used with --generatexml)"
    )
-
-
-def take_screenshot_on_failure(item, page):
-   screenshot_dir = os.path.join(os.getcwd(), "screenshots")
-   os.makedirs(screenshot_dir, exist_ok=True)
-   filename = f"{item.name}.png".replace("/", "_").replace("\\", "_")
-   path = os.path.join(screenshot_dir, filename)
-   page.screenshot(path=path)
-   return path
-
-
-def take_screenshot_selenium(item, driver):
-   screenshot_dir = os.path.join(os.getcwd(), "screenshots")
-   os.makedirs(screenshot_dir, exist_ok=True)
-   filename = f"{item.name}.png".replace("/", "_").replace("\\", "_")
-   path = os.path.join(screenshot_dir, filename)
-   driver.save_screenshot(path)
-   return path
 
 
 import logging
@@ -322,9 +304,11 @@ def open_html_report(report_path: str, json_path: str, config) -> None:
        with open(json_path, "r", encoding="utf-8") as f:
            report_data = json.load(f)
 
+       results = report_data.get("results", [])
+
        has_failures = any(
            t.get("status") == "failed" or t.get("error")
-           for t in report_data
+           for t in results
        )
 
        if should_open == "always" or (should_open == "failed" and has_failures):
