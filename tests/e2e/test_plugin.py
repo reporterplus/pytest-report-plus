@@ -35,7 +35,7 @@ def test_plugin_logs_expected_results():
             "test_skip": "skipped",
         }
 
-        for test in tests:
+        for test in tests["results"]:
             name = test["test"]
             expected_status = expected.get(name)
             if expected_status:
