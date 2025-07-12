@@ -304,9 +304,11 @@ def open_html_report(report_path: str, json_path: str, config) -> None:
        with open(json_path, "r", encoding="utf-8") as f:
            report_data = json.load(f)
 
+       results = report_data.get("results", [])
+
        has_failures = any(
            t.get("status") == "failed" or t.get("error")
-           for t in report_data
+           for t in results
        )
 
        if should_open == "always" or (should_open == "failed" and has_failures):
