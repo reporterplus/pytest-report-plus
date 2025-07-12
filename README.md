@@ -67,6 +67,7 @@ Export a fully merged JUnit XML report effortlessly — no external tools or plu
 With dynamic markers, you can assign tags like `api`, `critical`, or `slow` — or any custom label — at runtime using standard `pytest.mark.*`.
 No need for custom marker definitions. Perfect for smarter filtering, reporting, and analysis.
 
+![ScreenRecording2025-07-12at10 15 33PM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/f000388f-cdbc-418d-829b-a54309b8ffc4)
 
 
 #### Easily track Untracked test scenarios
