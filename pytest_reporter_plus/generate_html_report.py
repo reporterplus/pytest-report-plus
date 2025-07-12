@@ -489,18 +489,14 @@ class JSONReporter:
     </head>
     <body>
     <div id="fullscreen-overlay" class="fullscreen-overlay" onclick="closeFullscreen()"></div>
-    <script>
-     const filters = report.filters || {{}};
-     document.getElementById("failed-count").textContent = filters.failed || 0;
-    </script>
     <div class="checkbox-container">
       <label>
         <input type="checkbox" id="failedOnlyCheckbox" />
-        Show only failed tests (<span id="failed-count"></span>)
+        Show only failed tests (<span>{self.filters.get("failed", 0)}</span>)
       </label>
       <label>
         <input type="checkbox" id="skippedOnlyCheckbox" />
-        Show only skipped tests
+        Show only skipped tests (<span>{self.filters.get("skipped", 0)}</span>)
       </label>
       <label style="margin-left: 1rem;">
         <input type="checkbox" id="longestOnlyCheckbox" />
@@ -508,7 +504,7 @@ class JSONReporter:
       </label>
       <label style="margin-left: 1rem;">
         <input type="checkbox" id="untrackedOnlyCheckbox" />
-        Show untracked
+        Show untracked (<span>{self.filters.get("untracked", 0)}</span>)
       </label>
       <span onclick="toggleUntrackedInfo()" style="
   display: inline-flex;
@@ -550,7 +546,7 @@ class JSONReporter:
 </div>
 <label style="margin-left: 1rem;">
   <input type="checkbox" id="flakyOnlyCheckbox">
-  Show flaky tests only
+  Show flaky tests only (<span>{self.filters.get("flaky", 0)}</span>)
 </label>
     </div>
     <div class="search-container">
@@ -569,8 +565,10 @@ class JSONReporter:
 
 
         # Add checkboxes for all markers
-        for marker in sorted(all_markers):
-            html += f'<label><input type="checkbox" value="{marker}" /> {marker}</label> '
+        marker_counts = self.filters.get("marker_counts", {})
+        for marker in sorted(marker_counts):
+            count = marker_counts[marker]
+            html += f'<label><input type="checkbox" value="{marker}" /> {marker} ({count})</label> '
 
         html += '<div id="tests-container">'
 
