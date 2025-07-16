@@ -1,6 +1,6 @@
 import pytest
 
-from pytest_reporter_plus.plugin import mark_flaky_tests
+from pytest_html_plus.plugin import mark_flaky_tests
 
 
 class TestMarkFlakyTests:

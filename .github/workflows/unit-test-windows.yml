@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Unit Tests on windows
 
 on:
   pull_request:
@@ -43,4 +43,4 @@ jobs:
 
       - name: 🧪 Run tests with coverage
         run: |
-          poetry run pytest --cov=pytest_reporter_plus tests/ --cov-fail-under=79 --cov-report=term --reruns 1
+          poetry run pytest --cov=pytest_html_plus tests/ --cov-fail-under=79 --cov-report=term --reruns 1

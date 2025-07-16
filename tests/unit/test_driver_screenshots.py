@@ -1,5 +1,5 @@
 from unittest.mock import Mock
-from pytest_reporter_plus.resolver_driver import resolve_driver
+from pytest_html_plus.resolver_driver import resolve_driver
 
 
 def test_resolve_driver_prefers_page_over_others():
@@ -57,7 +57,7 @@ def test_resolve_driver_returns_none_when_no_match():
 
 import os
 from unittest.mock import Mock, patch
-from pytest_reporter_plus.resolver_driver import take_screenshot_generic
+from pytest_html_plus.resolver_driver import take_screenshot_generic
 
 
 @patch("os.makedirs")
@@ -108,11 +108,11 @@ def test_take_screenshot_raises_on_invalid_driver(mock_makedirs):
 
 
 from unittest.mock import Mock, patch
-from pytest_reporter_plus.plugin import take_screenshot_generic
+from pytest_html_plus.plugin import take_screenshot_generic
 
 
-@patch("pytest_reporter_plus.plugin.os.makedirs")
-@patch("pytest_reporter_plus.plugin.os.path.join", return_value="custom_dir/custom_file.png")
+@patch("pytest_html_plus.plugin.os.makedirs")
+@patch("pytest_html_plus.plugin.os.path.join", return_value="custom_dir/custom_file.png")
 def test_take_screenshot_with_custom_path(mock_join, mock_makedirs):
     mock_driver = Mock()
     mock_driver.screenshot = Mock()

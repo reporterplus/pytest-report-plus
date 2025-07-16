@@ -5,12 +5,12 @@ from pathlib import Path
 import pytest
 import json
 
-from pytest_reporter_plus.extract_link import extract_links_from_item
-from pytest_reporter_plus.generate_html_report import JSONReporter
-from pytest_reporter_plus.json_merge import merge_json_reports
-from pytest_reporter_plus.json_to_xml_converter import convert_json_to_junit_xml
-from pytest_reporter_plus.resolver_driver import take_screenshot_generic, resolve_driver
-from pytest_reporter_plus.send_email_report import send_email_from_env, load_email_env
+from pytest_html_plus.extract_link import extract_links_from_item
+from pytest_html_plus.generate_html_report import JSONReporter
+from pytest_html_plus.json_merge import merge_json_reports
+from pytest_html_plus.json_to_xml_converter import convert_json_to_junit_xml
+from pytest_html_plus.resolver_driver import take_screenshot_generic, resolve_driver
+from pytest_html_plus.send_email_report import send_email_from_env, load_email_env
 
 python_executable = shutil.which("python3") or shutil.which("python")
 test_screenshot_paths = {}
