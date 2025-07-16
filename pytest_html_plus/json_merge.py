@@ -1,7 +1,7 @@
 import json
 import os
 from collections import defaultdict
-from pytest_reporter_plus.compute_filter_counts import compute_filter_count
+from pytest_html_plus.compute_filter_counts import compute_filter_count
 
 
 def merge_json_reports(directory=".pytest_worker_jsons", output_path="final_report.json"):

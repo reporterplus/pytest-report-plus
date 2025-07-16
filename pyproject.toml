@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "pytest-reporter-plus"
-version = "0.3.3"
-description = "Lightweight enhanced HTML reporter for Pytest"
+name = "pytest-html-plus"
+version = "0.3.4"
+description = "Auto-generated HTML reports with filters, screenshots, logs, flaky detection & more — all without writing a single line of config."
 readme = "README.md"
 authors = ["Emjey", "Karan"]
 license = "MIT"
-packages = [{ include = "pytest_reporter_plus" }]
+packages = [{ include = "pytest_html_plus" }]
 keywords = [
     "pytest",
     "html-report",
@@ -24,9 +24,9 @@ keywords = [
     "pytest-report"
 ]
 
-urls.Homepage = "https://github.com/reporterplus/pytest-report-plus"
-urls.Source = "https://github.com/reporterplus/pytest-report-plus"
-urls.Tracker = "https://github.com/reporterplus/pytest-report-plus/issues"
+urls.Homepage = "https://github.com/reporterplus/pytest-html-plus"
+urls.Source = "https://github.com/reporterplus/pytest-html-plus"
+urls.Tracker = "https://github.com/reporterplus/pytest-html-plus/issues"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
@@ -48,6 +48,6 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.plugins."pytest11"]
-pytest_reporter_plus = "pytest_reporter_plus.plugin"
+pytest_reporter_plus = "pytest_html_plus.plugin"
 
 

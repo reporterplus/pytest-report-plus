@@ -6,7 +6,7 @@ from datetime import datetime
 import html
 from sys import path
 
-from pytest_reporter_plus.compute_filter_counts import compute_filter_count
+from pytest_html_plus.compute_filter_counts import compute_filter_count
 
 
 def main():

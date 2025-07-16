@@ -1,6 +1,6 @@
 import pytest
 
-from pytest_reporter_plus.send_email_report import send_email_from_env, load_email_env
+from pytest_html_plus.send_email_report import send_email_from_env, load_email_env
 from unittest.mock import patch, MagicMock
 
 @patch("smtplib.SMTP")

@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from pytest_reporter_plus.extract_link import extract_links_from_item
+from pytest_html_plus.extract_link import extract_links_from_item
 
 
 def test_extract_links_with_multiple_marker_names():

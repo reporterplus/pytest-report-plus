@@ -1,4 +1,4 @@
-# Contributing to pytest-reporter-plus and/or pytest-report-plus
+# Contributing to pytest-html-plus and/or pytest-report-plus
 
 Thank you for thinking about contributing to this project! Whether you're fixing a bug, improving the documentation, or proposing a new feature — you're welcome here.
 
@@ -11,7 +11,7 @@ cd pytest-report-plus
 ```
 
 ```
-docker build -t pytest-reporter-plus . 
+docker build -t pytest-html-plus . 
 ```
 
 ### Run Tests

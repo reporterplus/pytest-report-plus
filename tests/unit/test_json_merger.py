@@ -1,7 +1,7 @@
 import json
 import pytest
 
-from pytest_reporter_plus.json_merge import merge_json_reports
+from pytest_html_plus.json_merge import merge_json_reports
 
 
 # Sample test inputs
@@ -76,7 +76,7 @@ def test_merge_json_reports_handles_empty_directory(tmp_path):
 
 
 def test_compute_filter_count_failed_non_flaky():
-    from pytest_reporter_plus.compute_filter_counts import compute_filter_count
+    from pytest_html_plus.compute_filter_counts import compute_filter_count
 
     results = [
         {

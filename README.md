@@ -1,16 +1,16 @@
-# 🧪 pytest-reporter-plus - A Single page, actionable, plug-and-play unified Test Reports:
+# 🧪 pytest-html-plus - A Single page, actionable, plug-and-play unified Test Reports:
 
 ## Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity. Detect **flaky tests**, and optionally send reports via email**. Works beautifully with or without `xdist`.
 
-[![PyPI Downloads](https://static.pepy.tech/badge/pytest-reporter-plus)](https://pepy.tech/projects/pytest-reporter-plus) ![PyPI](https://img.shields.io/pypi/v/pytest-reporter-plus) ![Python Versions](https://img.shields.io/pypi/pyversions/pytest-reporter-plus)  ![License](https://img.shields.io/pypi/l/pytest-reporter-plus)  [![Unit Tests](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml/badge.svg)](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml)
+[![PyPI Downloads](https://static.pepy.tech/badge/pytest-html-plus)](https://pepy.tech/projects/pytest-html-plus) ![PyPI](https://img.shields.io/pypi/v/pytest-html-plus) ![Python Versions](https://img.shields.io/pypi/pyversions/pytest-html-plus)  ![License](https://img.shields.io/pypi/l/pytest-html-plus)  [![Unit Tests](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml/badge.svg)](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml)
 
 
 ## 🚀 Installation
 
 ```bash
-pip install pytest-reporter-plus
+pip install pytest-html-plus
 # or with Poetry
-poetry add pytest-reporter-plus
+poetry add pytest-html-plus
 ```
 
 ## 🧾 Usage
@@ -177,8 +177,8 @@ Your involvement helps make this tool better for everyone!
 ### Setting up the project is pretty simple
 
 ```
-docker build -t pytest-reporter-plus .
-docker run -it pytest-reporter-plus /bin/bash 
+docker build -t pytest-html-plus .
+docker run -it pytest-html-plus /bin/bash 
 poetry install --dev
 
 poetry run pytest tests/ 
