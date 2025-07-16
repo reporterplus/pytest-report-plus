@@ -1,3 +1,5 @@
+⚠️ Package renamed: This plugin was previously known as pytest-reporter-plus.
+
 # 🧪 pytest-html-plus - A Single page, actionable, plug-and-play unified Test Reports:
 
 ## Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity. Detect **flaky tests**, and optionally send reports via email**. Works beautifully with or without `xdist`.
