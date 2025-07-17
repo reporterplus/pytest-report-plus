@@ -1,45 +1,44 @@
 def resolve_driver(item):
-    candidates = item.funcargs
+   candidates = getattr(item, "funcargs", {})
 
-    # 1. Priority check: page, then context
-    for name in ("page", "context"):
-        obj = candidates.get(name)
-        if obj and hasattr(obj, "screenshot"):
-            return obj
+   # 1. Priority: 'page'
+   page = candidates.get("page")
+   if page and hasattr(page, "screenshot"):
+       return page
 
-    # 2. If any object has .screenshot
-    for val in candidates.values():
-        if hasattr(val, "screenshot"):
-            return val
+   # 2. .screenshot() fallback
+   for val in candidates.values():
+       if hasattr(val, "screenshot"):
+           return val
 
-    # 3. Fallback: Selenium-style .get_screenshot_as_file
-    for val in candidates.values():
-        if hasattr(val, "get_screenshot_as_file"):
-            return val
+   # 3. Selenium fallback
+   for val in candidates.values():
+       if hasattr(val, "get_screenshot_as_file"):
+           return val
 
-    # 4. Fallback to browser or driver if present
-    for name in ("browser", "driver"):
-        obj = candidates.get(name)
-        if obj:
-            return obj
+   # 4. Manual override
+   if hasattr(item, "page_for_screenshot"):
+       print(f"[resolve_driver] Using manually attached screenshot object")
+       return item.page_for_screenshot
 
-    # 5. Check for custom attribute (e.g., item.page_for_screenshot)
-    if hasattr(item, "page_for_screenshot"):
-        return item.page_for_screenshot
+   return None
 
-    return None
 
 import os
+def sanitize_filename(name):
+   return "".join(c if c.isalnum() else "_" for c in name)
 
 def take_screenshot_generic(path, item, driver):
-    os.makedirs(path, exist_ok=True)
-    filename = os.path.join(path, f"{item.name}_failure.png")
+   os.makedirs(path, exist_ok=True)
+   filename = os.path.join(path, f"{sanitize_filename(item.name)}_failure.png")
 
-    if hasattr(driver, "screenshot"):
-        driver.screenshot(path=filename)
-    elif hasattr(driver, "save_screenshot"):
-        driver.save_screenshot(filename)
-    else:
-        raise RuntimeError("Driver has no screenshot method")
+   if hasattr(driver, "screenshot"):
+       driver.screenshot(path=filename)
+   elif hasattr(driver, "save_screenshot"):
+       driver.save_screenshot(filename)
+   elif hasattr(driver, "get_screenshot_as_file"):
+       driver.get_screenshot_as_file(filename)
+   else:
+       raise RuntimeError(f"No screenshot method found for: {type(driver)}")
 
-    return filename
+   return filename
