@@ -579,9 +579,10 @@ class JSONReporter:
                 'failed' if test['status'] == 'failed' else
                 'skipped'
             )
+            test_name = "".join(c if c.isalnum() else "_" for c in test['test'])
             error_text = test.get("error", "")
             error_html = f"<pre>{self.format_error_with_diffs(error_text)}</pre>" if error_text else ""
-            screenshot_path = self.find_screenshot_and_copy(test['test'])
+            screenshot_path = self.find_screenshot_and_copy(test_name=test_name)
             screenshot_html = f'<div class="details-screenshot"><img src="{screenshot_path}" alt="Screenshot" onclick="toggleFullscreen(this)"></div>' if screenshot_path else ""
             markers = test.get("markers")
             marker_str = ",".join(markers) if isinstance(markers, list) else ""
