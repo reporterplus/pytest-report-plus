@@ -3,31 +3,51 @@ from pytest_html_plus.resolver_driver import resolve_driver
 
 
 def test_resolve_driver_prefers_page_over_others():
-    mock_driver = object()
+    mock_driver = Mock()
+    mock_driver.screenshot = Mock()
+
     item = Mock()
-    item.funcargs = {"page": mock_driver, "driver": object(), "browser": object()}
+    item.funcargs = {
+        "page": mock_driver,
+        "driver": Mock(),
+        "browser": Mock()
+    }
+
     assert resolve_driver(item) is mock_driver
 
 
 def test_resolve_driver_fallback_to_driver():
-    mock_driver = object()
+    mock_driver = Mock()
+    mock_driver.screenshot = Mock()
+
     item = Mock()
-    item.funcargs = {"driver": mock_driver}
+    item.funcargs = {
+        "driver": mock_driver
+    }
+
     assert resolve_driver(item) is mock_driver
 
 
 def test_resolve_driver_fallback_to_browser():
-    mock_driver = object()
+    mock_driver = Mock()
+    mock_driver.screenshot = Mock()
+
     item = Mock()
-    item.funcargs = {"browser": mock_driver}
+    item.funcargs = {
+        "browser": mock_driver
+    }
+
     assert resolve_driver(item) is mock_driver
 
 
 def test_resolve_driver_uses_page_for_screenshot_attr():
-    mock_driver = object()
+    mock_driver = Mock()
+    mock_driver.screenshot = Mock()
+
     item = Mock()
     item.funcargs = {}
     item.page_for_screenshot = mock_driver
+
     assert resolve_driver(item) is mock_driver
 
 
