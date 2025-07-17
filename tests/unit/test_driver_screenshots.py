@@ -122,7 +122,7 @@ def test_take_screenshot_raises_on_invalid_driver(mock_makedirs):
     try:
         take_screenshot_generic("screenshots", item, mock_driver)
     except RuntimeError as e:
-        assert "no screenshot method" in str(e)
+        assert "no screenshot method" in str(e).lower()
     else:
         assert False, "Expected RuntimeError was not raised"
 
