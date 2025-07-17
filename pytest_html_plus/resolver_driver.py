@@ -1,19 +1,33 @@
 def resolve_driver(item):
-    for name in ("page", "driver", "browser"):
-        if name in item.funcargs:
-            return item.funcargs[name]
+    candidates = item.funcargs
 
-    fallback = getattr(item, "page_for_screenshot", None)
-    if fallback:
-        return fallback
+    # 1. Priority check: page, then context
+    for name in ("page", "context"):
+        obj = candidates.get(name)
+        if obj and hasattr(obj, "screenshot"):
+            return obj
 
-    # Fallback
-    for val in item.funcargs.values():
-        if hasattr(val, "screenshot") or hasattr(val, "save_screenshot"):
+    # 2. If any object has .screenshot
+    for val in candidates.values():
+        if hasattr(val, "screenshot"):
             return val
 
-    return None
+    # 3. Fallback: Selenium-style .get_screenshot_as_file
+    for val in candidates.values():
+        if hasattr(val, "get_screenshot_as_file"):
+            return val
 
+    # 4. Fallback to browser or driver if present
+    for name in ("browser", "driver"):
+        obj = candidates.get(name)
+        if obj:
+            return obj
+
+    # 5. Check for custom attribute (e.g., item.page_for_screenshot)
+    if hasattr(item, "page_for_screenshot"):
+        return item.page_for_screenshot
+
+    return None
 
 import os
 
