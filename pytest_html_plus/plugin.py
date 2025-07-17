@@ -65,8 +65,9 @@ def pytest_runtest_makereport(item, call):
 
        reporter = config._json_reporter
        worker_id = os.getenv("PYTEST_XDIST_WORKER") or "main"
+       test_name =  "".join(c if c.isalnum() else "_" for c in item.name)
        reporter.log_result(
-           test_name=item.name,
+           test_name=test_name,
            nodeid=item.nodeid,
            status=report.outcome,
            duration=report.duration,
