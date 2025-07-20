@@ -167,6 +167,13 @@ class JSONReporter:
                 )
         return "\n".join(html_lines)
 
+    def generate_copy_button(self, content, label):
+        return f"""
+        <button class="inline-copy-btn" onclick="event.stopPropagation(); copyRawText(`{content}`)" title="Copy {label}">
+            ⧉
+        </button>
+        """
+
     def generate_html_report(self):
         # Extract all unique markers
         ignore_markers = {"link"}
@@ -269,12 +276,19 @@ class JSONReporter:
         const details = headerElem.nextElementSibling;
         details.style.display = (details.style.display === 'block') ? 'none' : 'block';
       }}
+      function copyRawText(text) {{
+  navigator.clipboard.writeText(text).then(() => {{
+    alert("Copied to clipboard!");
+  }}).catch(err => {{
+    alert("Failed to copy: " + err);
+  }});
+}}
 
       function copyToClipboard(text) {{
         navigator.clipboard.writeText(text).then(() => {{
-          console.log("Copied: " + text);
+          alert("Copied: " + text);
         }}).catch((err) => {{
-          console.error("Copy failed", err);
+          alert("Copy failed", err);
         }});
       }}
 
@@ -587,15 +601,35 @@ class JSONReporter:
             marker_str = ",".join(markers) if isinstance(markers, list) else ""
             stdout_html = ""
             if test.get('stdout'):
-                stdout_html = f"<div><strong>STDOUT:</strong><pre>{test['stdout']}</pre></div>"
+                stdout_escaped = test['stdout'].replace("`", "\\`")  # Escape backticks
+                stdout_html = f"""
+                <div><strong>STDOUT:</strong> {self.generate_copy_button(stdout_escaped, 'stdout')}
+                <pre>{test['stdout']}</pre></div>
+                """
 
             stderr_html = ""
             if test.get('stderr'):
-                stderr_html = f"<div><strong>STDERR:</strong><pre>{test['stderr']}</pre></div>"
+                stderr_escaped = test['stderr'].replace("`", "\\`")
+                stderr_html = f"""
+                <div><strong>STDERR:</strong> {self.generate_copy_button(stderr_escaped, 'stderr')}
+                <pre>{test['stderr']}</pre></div>
+                """
 
             logs_html = ""
             if test.get('logs'):
-                logs_html = f"<div><strong>Logs:</strong><pre>{test['logs']}</pre></div>"
+                logs_escaped = test['logs'].replace("`", "\\`")
+                logs_html = f"""
+                <div><strong>Logs:</strong> {self.generate_copy_button(logs_escaped, 'logs')}
+                <pre>{test['logs']}</pre></div>
+                """
+
+            error_html = ""
+            if test.get('error'):
+                error_escaped = test['error'].replace("`", "\\`")
+                error_html = f"""
+                <div><strong>Error:</strong> {self.generate_copy_button(error_escaped, 'error')}
+                <pre>{test['error']}</pre></div>
+                """
 
             flaky_badge = ""
             if test.get("flaky"):
