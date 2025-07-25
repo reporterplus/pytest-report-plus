@@ -3,10 +3,7 @@
 # 🧪 pytest-html-plus - A Single page, actionable, plug-and-play unified Test Reports:
 
 ## Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity. Detect **flaky tests**, and optionally send reports via email**. Works beautifully with or without `xdist`.
-[![PyPI Downloads](https://static.pepy.tech/badge/pytest-reporter-plus)](https://pepy.tech/projects/pytest-reporter-plus) ![PyPI](https://img.shields.io/pypi/v/pytest-html-plus) ![Python Versions](https://img.shields.io/pypi/pyversions/pytest-html-plus)  ![License](https://img.shields.io/pypi/l/pytest-html-plus)  [![Unit Tests](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml/badge.svg)](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml)
-
-[![Docs](https://img.shields.io/badge/docs-online-blue)](https://pytest-html-plus.readthedocs.io/en/latest/index.html)
-
+[![Docs](https://img.shields.io/badge/docs-online-blue)](https://pytest-html-plus.readthedocs.io/en/latest/index.html) [![PyPI Downloads](https://static.pepy.tech/badge/pytest-reporter-plus)](https://pepy.tech/projects/pytest-reporter-plus) ![PyPI](https://img.shields.io/pypi/v/pytest-html-plus) ![Python Versions](https://img.shields.io/pypi/pyversions/pytest-html-plus)  ![License](https://img.shields.io/pypi/l/pytest-html-plus)  [![Unit Tests](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml/badge.svg)](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml)
 
 ## 🚀 Installation
 
@@ -15,26 +12,6 @@ pip install pytest-html-plus
 # or with Poetry
 poetry add pytest-html-plus
 ```
-
-## 🧾 Usage
-
-Generate HTML + JSON reports:
-
-```bash
-pytest
-```
-
-If you are running with xdist
-
-```commandline
-pytest -n numberOfWorkers
-```
-
-You’ll get:
-
-report.html – a clean, styled HTML report
-
----
 
 # Keep using your regular pytest commands — just plug this in to unlock the below powerful reporting features with zero extra effort.
 
