@@ -12,11 +12,10 @@ An advanced and extensible HTML reporting plugin for pytest — with support for
    installation
    usage
    configuration
-   examples
-   features
-   integrations
-   contributing
-   changelog
+   Examples
+   Features
+   Integrations
+   Contributing
 
 Concepts and Philosophy
 =======================
