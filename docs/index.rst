@@ -7,6 +7,8 @@ Welcome to pytest-html-plus
 
    installation
    usage
+   contributing
+
 
 .. toctree::
    :maxdepth: 2
@@ -35,8 +37,3 @@ Welcome to pytest-html-plus
    Examples/markers
    Examples/outputs
    Examples/tracibility
-
-.. toctree::
-   :maxdepth: 2
-
-   contributing
