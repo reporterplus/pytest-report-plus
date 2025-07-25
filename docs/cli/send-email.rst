@@ -58,7 +58,7 @@ Use Cases
 
 - CI pipelines (nightly, regression, release runs)
 - Teams who want automated test report delivery
-- Scenarios where testers or leads need to review without pipeline access
+- Scenarios where testers or leads need to review without pipeline access. All they need to do is download and extract the zip to view the highly actionable single page pytest-html-plus report
 
 .. warning::
 
