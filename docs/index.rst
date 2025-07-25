@@ -1,28 +1,37 @@
-.. pytest-html-plus documentation master file
-
-pytest-html-plus
-=================
-
-An advanced and extensible HTML reporting plugin for pytest — with support for trace attachment, flaky detection, performance metadata, and more.
+Welcome to pytest-html-plus
+===========================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: 📦 Getting Started
 
    installation
    usage
-   configuration
-   Examples
-   Features
-   Integrations
-   Contributing
 
-Concepts and Philosophy
-=======================
+.. toctree::
+   :maxdepth: 2
+   :caption: ⚙️ CLI Commands
 
-pytest-html-plus is built to be a zero-config, minimal-overhead reporting companion for pytest users who need:
+   cli/cli
+   cli/html-output
+   cli/json-report
+   cli/generate-xml
+   cli/screenshots
+   cli/send-email
+   cli/should-open-report
 
-- Merged reports across multiple runs (no extra plugins required)
-- Portable, readable HTML + optional email delivery
-- Full traceability: logs, stdout/stderr, links, tags, durations — all embedded
-- Simplicity — no JS/CSS archiving or bloated charts
+.. toctree::
+   :maxdepth: 2
+   :caption: ✨ Features
+
+   Features/search
+
+.. toctree::
+   :maxdepth: 2
+   :caption: 🧪 Examples & Use Cases
+
+   Examples/Flaky
+   Examples/ci_examples
+   Examples/markers
+   Examples/outputs
+   Examples/tracibility

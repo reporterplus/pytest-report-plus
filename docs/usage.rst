@@ -24,14 +24,6 @@ This will:
 - Generate a combined JSON test report called final_report.json
 - Create a visual HTML report inside the `report_output/` folder
 
-This will:
-- Generate a combined JSON test report called ``final_report.json``
-- Create a visual HTML report inside the ``report_output/`` folder
-
-This will:
-- Generate a combined JSON test report called ``final_report.json``
-- Create a visual HTML report inside the ``report_output/`` folder
-
 The JSON report (`final_report.json`)
 --------------------------------------
 
@@ -71,24 +63,45 @@ The report has a structure like:
 .. code-block:: json
 
    {
-     "summary": {
-       "passed": 180,
-       "failed": 3,
-       "flaky": 2,
-       "duration": "150.42s"
-     },
-     "tests": [
-       {
-         "name": "test_checkout_login",
-         "status": "failed",
-         "duration": "12.3",
-         "trace": "path/to/trace.zip",
-         "screenshot": "path/to/screenshot.png",
-         ...
-       },
-       ...
-     ]
-   }
+  "filters": {
+    "skipped": 3,
+    "untracked": 43,
+    "flaky": 1,
+    "total": 45,
+    "passed": 42,
+    "marker_counts": {
+      "xfail": 1,
+      "link": 2,
+      "flaky": 2,
+      "skip": 2,
+      "parametrize": 5
+    }
+  },
+  "results": [
+    {
+      "test": "test_fail",
+      "nodeid": "tests/dummy_tests/test_cases.py::test_fail",
+      "status": "skipped",
+      "duration": 0.00022258399999997014,
+      "error": null,
+      "markers": [
+        "xfail",
+        "link",
+        "flaky"
+      ],
+      "file": "tests/dummy_tests/test_cases.py",
+      "line": 5,
+      "stdout": "stdout from fail\n",
+      "stderr": "stderr from fail\n",
+      "timestamp": "2025-07-25T16:31:27.507785Z",
+      "screenshot": "screenshots",
+      "logs": [],
+      "worker": "main",
+      "links": [
+        "https://example.com/fail-trace"
+      ],
+      "flaky": false
+    }]
 
 You can easily parse this using Python, JavaScript, or any JSON-compatible tool.
 
