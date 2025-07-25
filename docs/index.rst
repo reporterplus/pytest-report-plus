@@ -35,3 +35,8 @@ Welcome to pytest-html-plus
    Examples/markers
    Examples/outputs
    Examples/tracibility
+   
+.. toctree::
+   :maxdepth: 1
+
+   contributing
