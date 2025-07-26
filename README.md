@@ -1,11 +1,13 @@
 ⚠️ Package renamed: This plugin was previously known as pytest-reporter-plus.
 
-# 🧪 pytest-html-plus - A Single page, actionable, plug-and-play unified Test Reports:
+> ⚡ **Plug. Play. Debug without delay.**  
+> _Just install. No setup. Crystal-clear test reports out of the box._
 
-## Get a single, easy-to-read HTML report summarizing all your test results — no hassle, just clarity. Detect **flaky tests**, and optionally send reports via email**. Works beautifully with or without `xdist`.
+## Get a single, easy-to-read single page HTML actionable plug-and-play Unified reports summarizing all your test results — no hassle, just clarity. Detect **flaky tests**, and optionally send reports via email**. Works beautifully with or without `xdist`.
 
-[![PyPI Downloads](https://static.pepy.tech/badge/pytest-reporter-plus)](https://pepy.tech/projects/pytest-reporter-plus) ![PyPI](https://img.shields.io/pypi/v/pytest-html-plus) ![Python Versions](https://img.shields.io/pypi/pyversions/pytest-html-plus)  ![License](https://img.shields.io/pypi/l/pytest-html-plus)  [![Unit Tests](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml/badge.svg)](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml)
+[![PyPI Downloads](https://static.pepy.tech/badge/pytest-html-plus)](https://pepy.tech/projects/pytest-html-plus) ![PyPI](https://img.shields.io/pypi/v/pytest-html-plus) ![Python Versions](https://img.shields.io/pypi/pyversions/pytest-html-plus)  ![License](https://img.shields.io/pypi/l/pytest-html-plus)  [![Unit Tests](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml/badge.svg)](https://github.com/reach2jeyan/pytest-report-plus/actions/workflows/unit-test.yml)
 
+[![Discord](https://img.shields.io/discord/1377581416337903646?labelColor=black&logo=discord&logoColor=c20a71&style=for-the-badge&color=c20a71)](https://discord.gg/Pjy2sCBC) 
 
 ## 🚀 Installation
 
@@ -17,21 +19,15 @@ poetry add pytest-html-plus
 
 ## 🧾 Usage
 
-Generate HTML + JSON reports:
+Generate HTML + JSON reports by simply running:
 
 ```bash
 pytest
 ```
 
-If you are running with xdist
-
-```commandline
-pytest -n numberOfWorkers
-```
-
 You’ll get:
 
-report.html – a clean, styled HTML report
+report.html – a clean, styled HTML report within report_output/
 
 ---
 

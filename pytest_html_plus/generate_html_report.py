@@ -57,6 +57,7 @@ class JSONReporter:
             nodeid,
             status,
             duration,
+            trace=None,
             error=None,
             markers=None,
             filepath=None,
@@ -73,6 +74,7 @@ class JSONReporter:
             "nodeid": nodeid,
             "status": status,
             "duration": duration,
+            "trace": trace,
             "error": error,
             "markers": markers or [],
             "file": filepath,
@@ -137,35 +139,22 @@ class JSONReporter:
                     return os.path.join("screenshots", file)
         return None
 
-    def format_error_with_diffs(self, error_text: str) -> str:
-        if not error_text:
-            return ""
+    def escape_for_js_template_literal(self, text):
 
-        lines = html.escape(error_text).splitlines()
-        html_lines = []
-        for line in lines:
-            stripped = line.strip()
-            if stripped.startswith("-"):
-                html_lines.append(
-                    f"<div style='color: red; background-color: #ffecec; padding: 2px; border-left: 4px solid red;'>❌ {line}</div>"
-                )
-            elif stripped.startswith("+"):
-                html_lines.append(
-                    f"<div style='color: green; background-color: #eaffea; padding: 2px; border-left: 4px solid green;'>✅ {line}</div>"
-                )
-            elif stripped.startswith("E "):
-                html_lines.append(
-                    f"<div style='color: #d8000c; background-color: #fff2f2; padding: 2px; border-left: 4px solid #d8000c;'>{line}</div>"
-                )
-            elif "AssertionError" in stripped:
-                html_lines.append(
-                    f"<div style='color: darkorange; font-weight: bold; padding: 2px;'>{line}</div>"
-                )
-            else:
-                html_lines.append(
-                    f"<pre style='margin: 0; font-family: monospace;'>{line}</pre>"
-                )
-        return "\n".join(html_lines)
+        return (
+            text.replace('\\', '\\\\')  # escape backslashes
+            .replace('`', '\\`')  # escape backticks
+            .replace('\n', '\\n')  # escape newlines
+        )
+
+
+    def generate_copy_button(self, content, label):
+        safe_content = self.escape_for_js_template_literal(content)
+        return f"""
+                <button class="inline-copy-btn" onclick="event.stopPropagation(); copyRawText(`{safe_content}`)" title="Copy {label}">
+                    ⧉
+                </button>
+            """
 
     def generate_html_report(self):
         # Extract all unique markers
@@ -183,6 +172,7 @@ class JSONReporter:
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+    
       body {{ font-family: Arial, sans-serif; padding: 1rem; background: #f9f9f9; }}
       .test {{ border: 1px solid #ddd; margin-bottom: 0.5rem; border-radius: 5px; background: white; }}
       .header {{ padding: 0.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }}
@@ -269,12 +259,19 @@ class JSONReporter:
         const details = headerElem.nextElementSibling;
         details.style.display = (details.style.display === 'block') ? 'none' : 'block';
       }}
+      function copyRawText(text) {{
+  navigator.clipboard.writeText(text).then(() => {{
+    alert("Copied to clipboard!");
+  }}).catch(err => {{
+    alert("Failed to copy: " + err);
+  }});
+}}
 
       function copyToClipboard(text) {{
         navigator.clipboard.writeText(text).then(() => {{
-          console.log("Copied: " + text);
+          alert("Copied: " + text);
         }}).catch((err) => {{
-          console.error("Copy failed", err);
+          alert("Copy failed", err);
         }});
       }}
 
@@ -579,23 +576,47 @@ class JSONReporter:
                 'failed' if test['status'] == 'failed' else
                 'skipped'
             )
-            error_text = test.get("error", "")
-            error_html = f"<pre>{self.format_error_with_diffs(error_text)}</pre>" if error_text else ""
             screenshot_path = self.find_screenshot_and_copy(test['test'])
             screenshot_html = f'<div class="details-screenshot"><img src="{screenshot_path}" alt="Screenshot" onclick="toggleFullscreen(this)"></div>' if screenshot_path else ""
             markers = test.get("markers")
             marker_str = ",".join(markers) if isinstance(markers, list) else ""
             stdout_html = ""
             if test.get('stdout'):
-                stdout_html = f"<div><strong>STDOUT:</strong><pre>{test['stdout']}</pre></div>"
+                stdout_escaped = test['stdout'].replace("`", "\\`")  # Escape backticks
+                stdout_html = f"""
+                <div><strong>STDOUT:</strong> {self.generate_copy_button(stdout_escaped, 'stdout')}
+                <pre>{test['stdout']}</pre></div>
+                """
 
             stderr_html = ""
             if test.get('stderr'):
-                stderr_html = f"<div><strong>STDERR:</strong><pre>{test['stderr']}</pre></div>"
+                stderr_escaped = test['stderr'].replace("`", "\\`")
+                stderr_html = f"""
+                <div><strong>STDERR:</strong> {self.generate_copy_button(stderr_escaped, 'stderr')}
+                <pre>{test['stderr']}</pre></div>
+                """
 
             logs_html = ""
             if test.get('logs'):
-                logs_html = f"<div><strong>Logs:</strong><pre>{test['logs']}</pre></div>"
+                logs_escaped = test['logs'].replace("`", "\\`")
+                logs_html = f"""
+                <div><strong>Logs:</strong> {self.generate_copy_button(logs_escaped, 'logs')}
+                <pre>{test['logs']}</pre></div>
+                """
+
+            trace_html = ""
+            if test.get('trace') and test['trace'].strip():
+                trace_html = f"""
+                <div><strong>Trace:</strong></strong>
+                <pre>{test['trace']}</pre></div>
+                """
+
+            error_html = ""
+            if test.get('error'):
+                error_html = f"""
+                <div><strong>Error:</strong> {self.generate_copy_button(test['error'], 'error')}
+                <pre style='color: red;'>{test['error']}</pre></div>
+                """
 
             flaky_badge = ""
             if test.get("flaky"):
@@ -663,6 +684,7 @@ class JSONReporter:
   <div class="details">
     <div class="details-content">
       <div class="details-text">
+        {trace_html}
         {error_html}
         {stdout_html}
         {stderr_html}
